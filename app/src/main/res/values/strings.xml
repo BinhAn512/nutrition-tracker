@@ -1,0 +1,23 @@
+<resources>
+    <string name="app_name">CompleatApp</string>
+    <string name="app_logo">App Logo</string>
+    <string name="empty_bowl">Empty Bowl</string>
+    <string name="banana">Banana</string>
+    <string name="apple">Apple</string>
+    <string name="leaf">Leaf</string>
+    <string name="track_your">Track Your <font color="#3366CC">Nutrition</font>,</string>
+    <string name="transform_your_health">Transform Your <font color="#4CAF50">Health</font></string>
+    <string name="stay_healthy_by_tracking_every_meal">Stay healthy by tracking every meal!</string>
+    <string name="continue_text">Continue</string>
+    <string name="skip">Skip</string>
+    <string name="whats_your_age">What\'s your Age?</string>
+    <string name="back_button">Back Button</string>
+    <string name="progress_indicator">1 of 4</string>
+    <string name="progress_indicator_2">2 of 4</string>
+    <string name="progress_indicator_3">3 of 4</string>
+    <string name="progress_indicator_4">4 of 4</string>
+    <string name="whats_your_current_weight">What\'s your current weight right now?</string>
+    <string name="kg">Kg</string>
+    <string name="lbs">Lbs</string>
+    <string name="scale_lines">Scale lines</string>
+</resources>

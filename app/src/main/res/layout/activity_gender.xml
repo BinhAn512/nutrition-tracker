@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/white"
+    tools:context=".GenderActivity">
+
+    <TextView
+        android:id="@+id/iv_logo"
+        android:layout_width="150dp"
+        android:text="Nutrio"
+        android:textStyle="bold"
+        android:gravity="center"
+        android:textSize="32dp"
+        android:fontFamily="monospace"
+        android:layout_height="50dp"
+        android:layout_marginTop="32dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageButton
+        android:id="@+id/btn_back"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:contentDescription="@string/back_button"
+        android:padding="8dp"
+        android:src="@drawable/ic_back"
+        app:layout_constraintBottom_toBottomOf="@+id/iv_logo"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/iv_logo" />
+
+    <TextView
+        android:id="@+id/tv_progress"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="16dp"
+        android:text="@string/progress_indicator_4"
+        android:textColor="@android:color/black"
+        android:textSize="14sp"
+        app:layout_constraintBottom_toBottomOf="@+id/iv_logo"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/iv_logo" />
+
+    <TextView
+        android:id="@+id/tv_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="48dp"
+        android:layout_marginEnd="32dp"
+        android:gravity="center"
+        android:text="What's your gender?"
+        android:textColor="@android:color/black"
+        android:textSize="28sp"
+        android:textStyle="bold"
+        app:layout_constraintTop_toBottomOf="@id/iv_logo" />
+
+    <RadioButton
+        android:id="@+id/rb_female"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="32dp"
+        android:layout_marginVertical="32dp"
+        android:layout_marginEnd="32dp"
+        android:layout_marginBottom="16dp"
+        android:textStyle="bold"
+        android:background="@drawable/gender_selector_background"
+        android:drawableStart="@drawable/ic_female"
+        android:drawablePadding="16dp"
+        android:padding="16dp"
+        android:text="Female"
+        android:textSize="16sp"
+        app:layout_constraintTop_toBottomOf="@id/tv_title" />
+
+    <RadioButton
+        android:id="@+id/rb_male"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="32dp"
+        android:layout_marginVertical="20dp"
+        android:layout_marginEnd="32dp"
+        android:layout_marginBottom="16dp"
+        android:textStyle="bold"
+        android:background="@drawable/gender_selector_background_selected"
+        android:drawableStart="@drawable/ic_male"
+        android:drawablePadding="16dp"
+        android:padding="16dp"
+        android:text="Male"
+        android:textSize="16sp"
+        app:layout_constraintTop_toBottomOf="@id/rb_female" />
+
+    <RadioButton
+        android:id="@+id/rb_other"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="32dp"
+        android:layout_marginVertical="20dp"
+        android:layout_marginEnd="32dp"
+        android:layout_marginBottom="16dp"
+        android:background="@drawable/gender_selector_background"
+        android:textStyle="bold"
+        android:drawableStart="@drawable/ic_other"
+        android:drawablePadding="16dp"
+        android:padding="16dp"
+        android:text="Other"
+        android:textSize="16sp"
+        app:layout_constraintTop_toBottomOf="@id/rb_male" />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/btn_continue"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="32dp"
+        android:layout_marginEnd="32dp"
+        android:layout_marginBottom="16dp"
+        android:background="@drawable/btn_orange_background"
+        android:paddingTop="12dp"
+        android:paddingBottom="12dp"
+        android:text="@string/continue_text"
+        android:textColor="@android:color/white"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"  />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
