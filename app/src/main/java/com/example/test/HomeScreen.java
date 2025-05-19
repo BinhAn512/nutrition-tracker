@@ -10,6 +10,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.test.adapters.MealAdapter;
+import com.example.test.views.CalorieCircleView;
+import com.example.test.views.NutrientCircleView;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import java.text.SimpleDateFormat;

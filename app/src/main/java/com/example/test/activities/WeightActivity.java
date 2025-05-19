@@ -1,4 +1,4 @@
-package com.example.test;
+package com.example.test.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -8,6 +8,8 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.SeekBar;
 import android.widget.TextView;
+
+import com.example.test.R;
 
 public class WeightActivity extends AppCompatActivity {
 

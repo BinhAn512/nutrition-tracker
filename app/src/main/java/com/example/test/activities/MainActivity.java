@@ -1,4 +1,4 @@
-package com.example.test;
+package com.example.test.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -6,9 +6,10 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
-import android.widget.TextView;
 
-public class StartScreenActivity extends AppCompatActivity {
+import com.example.test.R;
+
+public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,11 +25,12 @@ public class StartScreenActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 // Navigate to next screen
-                Intent intent = new Intent(StartScreenActivity.this, AgeSelectActivity.class);
+                Intent intent = new Intent(MainActivity.this, AgeSelectActivity.class);
                 startActivity(intent);
 //                finish(); // Optional: close this activity so user can't go back
             }
         });
 
     }
+
 }

@@ -1,4 +1,4 @@
-package com.example.test;
+package com.example.test.adapters;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,20 +11,24 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.test.models.Food;
+import com.example.test.FoodDetails;
+import com.example.test.R;
+
 import java.util.List;
 
 public class FoodAdapter extends RecyclerView.Adapter<FoodAdapter.FoodViewHolder> {
 
-    private List<FoodItem> foodItems;
+    private List<Food> foods;
     private OnFoodItemClickListener listener;
     private int selectedPosition = -1;
 
     public interface OnFoodItemClickListener {
-        void onFoodItemClick(FoodItem item, int position);
+        void onFoodItemClick(Food item, int position);
     }
 
-    public FoodAdapter(List<FoodItem> foodItems, OnFoodItemClickListener listener) {
-        this.foodItems = foodItems;
+    public FoodAdapter(List<Food> foods, OnFoodItemClickListener listener) {
+        this.foods = foods;
         this.listener = listener;
     }
 
@@ -44,9 +48,9 @@ public class FoodAdapter extends RecyclerView.Adapter<FoodAdapter.FoodViewHolder
         return selectedPosition;
     }
 
-    public FoodItem getSelectedItem() {
-        if (selectedPosition != -1 && selectedPosition < foodItems.size()) {
-            return foodItems.get(selectedPosition);
+    public Food getSelectedItem() {
+        if (selectedPosition != -1 && selectedPosition < foods.size()) {
+            return foods.get(selectedPosition);
         }
         return null;
     }
@@ -60,7 +64,7 @@ public class FoodAdapter extends RecyclerView.Adapter<FoodAdapter.FoodViewHolder
 
     @Override
     public void onBindViewHolder(@NonNull FoodViewHolder holder, int position) {
-        FoodItem item = foodItems.get(position);
+        Food item = foods.get(position);
         holder.foodName.setText(item.getName());
         holder.foodDetails.setText(item.getCalories() + " kcal . " + item.getWeight() + " gram");
 
@@ -97,7 +101,7 @@ public class FoodAdapter extends RecyclerView.Adapter<FoodAdapter.FoodViewHolder
 
     @Override
     public int getItemCount() {
-        return foodItems.size();
+        return foods.size();
     }
 
     static class FoodViewHolder extends RecyclerView.ViewHolder {

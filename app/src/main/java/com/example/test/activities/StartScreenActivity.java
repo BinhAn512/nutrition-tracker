@@ -1,22 +1,15 @@
-package com.example.test;
+package com.example.test.activities;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.ImageButton;
-import android.widget.ImageView;
-import android.widget.TextView;
 
-import java.util.List;
+import com.example.test.R;
 
-public class MainActivity extends AppCompatActivity {
+public class StartScreenActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,12 +25,11 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 // Navigate to next screen
-                Intent intent = new Intent(MainActivity.this, AgeSelectActivity.class);
+                Intent intent = new Intent(StartScreenActivity.this, AgeSelectActivity.class);
                 startActivity(intent);
 //                finish(); // Optional: close this activity so user can't go back
             }
         });
 
     }
-
 }

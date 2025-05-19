@@ -1,4 +1,4 @@
-package com.example.test;
+package com.example.test.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -11,7 +11,9 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
-import android.widget.TextView;
+
+import com.example.test.R;
+import com.example.test.adapters.AgeAdapter;
 
 public class AgeSelectActivity extends AppCompatActivity implements AgeAdapter.OnAgeSelectedListener {
 

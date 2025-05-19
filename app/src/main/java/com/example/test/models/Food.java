@@ -1,16 +1,26 @@
-package com.example.test;
+package com.example.test.models;
 
-public class FoodItem {
+import com.google.gson.annotations.SerializedName;
+
+public class Food {
+    @SerializedName("food_id")
     private int id;
+
+    @SerializedName("food_name")
     private String name;
+
+    @SerializedName("caloric_value")
     private int calories;
+
+    @SerializedName("nutrition_density")
+    private int nutritionDensity;
     private int carbs;
     private int protein;
     private int fat;
 
     private int weight;
 
-    public FoodItem(int id, String name, int calories, int carbs, int protein, int fat, int weight) {
+    public Food(int id, String name, int calories, int carbs, int protein, int fat, int weight) {
         this.id = id;
         this.name = name;
         this.calories = calories;

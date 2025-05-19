@@ -4,7 +4,6 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
-import android.widget.ScrollView;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -12,8 +11,8 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.test.FoodAdapter;
-import com.example.test.FoodItem;
+import com.example.test.adapters.FoodAdapter;
+import com.example.test.models.Food;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -60,15 +59,15 @@ public class FoodAdd extends AppCompatActivity implements FoodAdapter.OnFoodItem
         foodListRecyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         // Example food data (sushi items based on the screenshot)
-        List<FoodItem> foodItems = new ArrayList<>();
-        foodItems.add(new FoodItem(1, "Sushi Roll", 180, 3, 4,5,6));
-        foodItems.add(new FoodItem(2, "Sushi, Tuna (Maguro)", 28,7,3,5,6));
-//        foodItems.add(new FoodItem("Sushi, Salmon (Sake)", 48, 30));
-//        foodItems.add(new FoodItem("Sushi, Yellowtail (Hamachi)", 65, 30));
-//        foodItems.add(new FoodItem("Sushi, Eel (Unagi)", 100, 35));
+        List<Food> foods = new ArrayList<>();
+        foods.add(new Food(1, "Sushi Roll", 180, 3, 4,5,6));
+        foods.add(new Food(2, "Sushi, Tuna (Maguro)", 28,7,3,5,6));
+//        foods.add(new Food("Sushi, Salmon (Sake)", 48, 30));
+//        foods.add(new Food("Sushi, Yellowtail (Hamachi)", 65, 30));
+//        foods.add(new Food("Sushi, Eel (Unagi)", 100, 35));
 
         // Set up adapter
-        foodAdapter = new FoodAdapter(foodItems, this);
+        foodAdapter = new FoodAdapter(foods, this);
         foodListRecyclerView.setAdapter(foodAdapter);
 
         // Set click listener for Add button
@@ -106,7 +105,7 @@ public class FoodAdd extends AppCompatActivity implements FoodAdapter.OnFoodItem
     }
 
     @Override
-    public void onFoodItemClick(FoodItem item, int position) {
+    public void onFoodItemClick(Food item, int position) {
         // Update adapter's selected position
         foodAdapter.setSelectedPosition(position);
 
