@@ -1,6 +1,7 @@
 package com.example.test;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
@@ -12,10 +13,15 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.test.adapters.FoodAdapter;
+import com.example.test.api.ApiService;
 import com.example.test.models.Food;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class FoodAdd extends AppCompatActivity implements FoodAdapter.OnFoodItemClickListener {
 
@@ -26,6 +32,7 @@ public class FoodAdd extends AppCompatActivity implements FoodAdapter.OnFoodItem
     private ConstraintLayout selectionContainer;
     private TextView kcalValue;
     private Button btnAddSelection;
+    List<Food> foods;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,6 +46,7 @@ public class FoodAdd extends AppCompatActivity implements FoodAdapter.OnFoodItem
         selectionContainer = findViewById(R.id.selection_container);
         kcalValue = findViewById(R.id.kcal_value);
         btnAddSelection = findViewById(R.id.btn_add_selection);
+        foods = new ArrayList<>();
 
         // Set up tab click listeners
         tabRecent.setOnClickListener(new View.OnClickListener() {
@@ -55,20 +63,7 @@ public class FoodAdd extends AppCompatActivity implements FoodAdapter.OnFoodItem
             }
         });
 
-        // Set up RecyclerView
-        foodListRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-
-        // Example food data (sushi items based on the screenshot)
-        List<Food> foods = new ArrayList<>();
-        foods.add(new Food(1, "Sushi Roll", 180, 3, 4,5,6));
-        foods.add(new Food(2, "Sushi, Tuna (Maguro)", 28,7,3,5,6));
-//        foods.add(new Food("Sushi, Salmon (Sake)", 48, 30));
-//        foods.add(new Food("Sushi, Yellowtail (Hamachi)", 65, 30));
-//        foods.add(new Food("Sushi, Eel (Unagi)", 100, 35));
-
-        // Set up adapter
-        foodAdapter = new FoodAdapter(foods, this);
-        foodListRecyclerView.setAdapter(foodAdapter);
+        FetchFoodData();
 
         // Set click listener for Add button
         btnAddSelection.setOnClickListener(new View.OnClickListener() {
@@ -120,4 +115,33 @@ public class FoodAdd extends AppCompatActivity implements FoodAdapter.OnFoodItem
 
     }
 
+    private void FetchFoodData() {
+        // Set up RecyclerView
+        foodListRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+
+        // Example food data (sushi items based on the screenshot)
+
+
+//        foods.add(new Food("Sushi, Salmon (Sake)", 48, 30));
+//        foods.add(new Food("Sushi, Yellowtail (Hamachi)", 65, 30));
+//        foods.add(new Food("Sushi, Eel (Unagi)", 100, 35));
+
+        ApiService.apiService.getFoods().enqueue(new Callback<List<Food>>() {
+            @Override
+            public void onResponse(Call<List<Food>> call, Response<List<Food>> response) {
+                foods = response.body();
+                Log.d("Foods", String.valueOf(foods.get(1).getName()));
+                // Set up adapter
+                foodAdapter = new FoodAdapter(foods, FoodAdd.this);
+                foodListRecyclerView.setAdapter(foodAdapter);
+            }
+
+            @Override
+            public void onFailure(Call<List<Food>> call, Throwable t) {
+                Log.e("Api Connection Failed", "Failed");
+            }
+        });
+
+
+    }
 }

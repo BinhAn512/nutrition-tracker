@@ -10,50 +10,47 @@ public class Food {
     private String name;
 
     @SerializedName("caloric_value")
-    private int calories;
+    private float calories;
 
     @SerializedName("nutrition_density")
-    private int nutritionDensity;
-    private int carbs;
-    private int protein;
-    private int fat;
+    private float nutritionDensity;
 
-    private int weight;
-
-    public Food(int id, String name, int calories, int carbs, int protein, int fat, int weight) {
+    public Food(int id, String name, float calories, float nutritionDensity) {
         this.id = id;
         this.name = name;
         this.calories = calories;
-        this.carbs = carbs;
-        this.protein = protein;
-        this.fat = fat;
-        this.weight = weight;
+        this.nutritionDensity = nutritionDensity;
     }
 
     public int getId() {
         return id;
     }
 
+    public void setId(int id) {
+        this.id = id;
+    }
+
     public String getName() {
         return name;
     }
 
-    public int getCalories() {
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public float getCalories() {
         return calories;
     }
 
-    public int getCarbs() {
-        return carbs;
+    public void setCalories(float calories) {
+        this.calories = calories;
     }
 
-    public int getProtein() {
-        return protein;
+    public float getNutritionDensity() {
+        return nutritionDensity;
     }
 
-    public int getFat() {
-        return fat;
-    }
-    public int getWeight() {
-        return weight;
+    public void setNutritionDensity(float nutritionDensity) {
+        this.nutritionDensity = nutritionDensity;
     }
 }

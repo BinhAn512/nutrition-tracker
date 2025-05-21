@@ -52,7 +52,7 @@ public class Meal {
     public int getTotalCarbs() {
         int total = 0;
         for (Food item : foods) {
-            total += item.getCarbs();
+//            total += item.getCarbs();
         }
         return total;
     }
@@ -60,7 +60,7 @@ public class Meal {
     public int getTotalProtein() {
         int total = 0;
         for (Food item : foods) {
-            total += item.getProtein();
+//            total += item.getProtein();
         }
         return total;
     }
@@ -68,7 +68,7 @@ public class Meal {
     public int getTotalFat() {
         int total = 0;
         for (Food item : foods) {
-            total += item.getFat();
+//            total += item.getFat();
         }
         return total;
     }

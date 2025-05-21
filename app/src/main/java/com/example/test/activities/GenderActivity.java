@@ -46,6 +46,8 @@ public class GenderActivity extends AppCompatActivity {
             // Pass selected goal to next activity
             intent.putExtra("GENDER", selectedGoal);
 
+            // ADD USER PROFILE (TA)
+
             startActivity(intent);
         });
 

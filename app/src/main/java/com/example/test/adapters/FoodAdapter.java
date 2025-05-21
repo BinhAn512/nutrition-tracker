@@ -1,5 +1,6 @@
 package com.example.test.adapters;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.content.Intent;
@@ -66,7 +67,8 @@ public class FoodAdapter extends RecyclerView.Adapter<FoodAdapter.FoodViewHolder
     public void onBindViewHolder(@NonNull FoodViewHolder holder, int position) {
         Food item = foods.get(position);
         holder.foodName.setText(item.getName());
-        holder.foodDetails.setText(item.getCalories() + " kcal . " + item.getWeight() + " gram");
+        Log.d("Food View Name", item.getName());
+//        holder.foodDetails.setText(item.getCalories() + " kcal . " + item.getWeight() + " gram");
 
         // Set selected state
         if (position == selectedPosition) {
@@ -92,8 +94,8 @@ public class FoodAdapter extends RecyclerView.Adapter<FoodAdapter.FoodViewHolder
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(v.getContext(), FoodDetails.class);
-                intent.putExtra("food_name", item.getName());
-                intent.putExtra("food_details", item.getCalories() + " kcal . " + item.getWeight() + " gram");
+                intent.putExtra("foodIndex", holder.getAdapterPosition() + 1);
+//                intent.putExtra("food_details", item.getCalories() + " kcal . " + item.getWeight() + " gram");
                 v.getContext().startActivity(intent);
             }
         });
