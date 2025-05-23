@@ -1,16 +1,27 @@
 package com.example.test;
 
+import static com.example.test.FoodAdd.mealId;
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatButton;
 
 import com.example.test.api.ApiService;
+import com.example.test.models.FavouriteFood;
 import com.example.test.models.Food;
+import com.example.test.models.FoodLog;
+import com.example.test.models.Macronutrients;
+import com.example.test.models.Minerals;
+import com.example.test.models.Vitamins;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -55,6 +66,13 @@ public class FoodDetails extends AppCompatActivity {
     private TextView tvVitaminE;
     private TextView tvVitaminK;
 
+    private ImageView btnIncrease;
+    private ImageView btnDecrease;
+    private TextView tvQuantity;
+    private ImageButton btnFavourite;
+    int quantity;
+    int foodId;
+
    @Override
     public void onCreate (Bundle savedInstanceState){
        super.onCreate(savedInstanceState);
@@ -67,16 +85,45 @@ public class FoodDetails extends AppCompatActivity {
        });
 
        Intent intent = getIntent();
-       int foodIndex = intent.getIntExtra("foodIndex", -1);
-       GetFoodInfo(foodIndex);
+       foodId = intent.getIntExtra("foodId", -1);
+       GetFoodInfo(foodId);
 
        AppCompatButton btn_add = findViewById(R.id.btnAdd);
        btn_add.setOnClickListener(v -> {
+           // Log Food
+           LogFood();
            finish();
+       });
+
+       CheckFavouriteFood();
+
+       btnIncrease.setOnClickListener(new View.OnClickListener() {
+           @Override
+           public void onClick(View v) {
+               quantity = Integer.valueOf(tvQuantity.getText().toString());
+               quantity++;
+               tvQuantity.setText(String.valueOf(quantity));
+           }
+       });
+
+       btnDecrease.setOnClickListener(new View.OnClickListener() {
+           @Override
+           public void onClick(View v) {
+               quantity = Integer.valueOf(tvQuantity.getText().toString());
+
+               if (quantity == 0) return;
+               quantity--;
+               tvQuantity.setText(String.valueOf(quantity));
+           }
        });
    }
 
    private void AssignView() {
+       btnDecrease = findViewById(R.id.btnQuantityMinus);
+       btnIncrease = findViewById(R.id.btnQuantityAdd);
+       tvQuantity = findViewById(R.id.quantityText);
+       btnFavourite = findViewById(R.id.btnFavorite);
+
        tvFoodName = findViewById(R.id.foodName);
        tvCaloriesValue = findViewById(R.id.caloriesValue);
        tvCarbsValue = findViewById(R.id.carbsValue);
@@ -87,7 +134,86 @@ public class FoodDetails extends AppCompatActivity {
        tvCalcium = findViewById(R.id.calcium);
        tvIron = findViewById(R.id.iron);
        tvPotassium = findViewById(R.id.potassium);
+       tvFat = findViewById(R.id.fat);
+       tvSaturateFat = findViewById(R.id.saturatedFat);
+       tvMonosaturateFat = findViewById(R.id.monosaturatedFat);
+       tvPolyunsaturateFat = findViewById(R.id.polyunsaturatedFat);
+       tvSugars = findViewById(R.id.sugars);
+       tvDietaryFiber = findViewById(R.id.dietaryFiber);
+       tvWater = findViewById(R.id.water);
+
+       tvCalcium = findViewById(R.id.calcium);
+       tvIron = findViewById(R.id.iron);
+       tvPotassium = findViewById(R.id.potassium);
+       tvCopper = findViewById(R.id.copper);
+       tvMagnesium = findViewById(R.id.magnesium);
+       tvManganese = findViewById(R.id.manganese);
+       tvPhosphorus = findViewById(R.id.phosphorus);
+       tvSelenium = findViewById(R.id.selenium);
+       tvZinc = findViewById(R.id.zinc);
+
+       tvVitaminA = findViewById(R.id.vitaminA);
+       tvVitaminB1 = findViewById(R.id.vitaminB1);
+       tvVitaminB11 = findViewById(R.id.vitaminB11);
+       tvVitaminB12 = findViewById(R.id.vitaminB12);
+       tvVitaminB2 = findViewById(R.id.vitaminB2);
+       tvVitaminB3 = findViewById(R.id.vitaminB3);
+       tvVitaminB5 = findViewById(R.id.vitaminB5);
+       tvVitaminB6 = findViewById(R.id.vitaminB6);
+       tvVitaminC = findViewById(R.id.vitaminC);
+       tvVitaminD = findViewById(R.id.vitaminD);
+       tvVitaminE = findViewById(R.id.vitaminE);
+       tvVitaminK = findViewById(R.id.vitaminK);
    }
+
+    public void LogFood() {
+        // Get Meal based on Meal Id
+        String meal;
+        if (mealId == 1) {
+            meal = "breakfast";
+        } else if (mealId == 2) {
+            meal = "lunch";
+        } else if (mealId == 3) {
+            meal = "dinner";
+        } else {
+            Toast.makeText(FoodDetails.this, "Invalid meal", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        FoodLog foodLog = new FoodLog(1, foodId,
+                Integer.valueOf(tvQuantity.getText().toString()), "kg", meal, "");
+        ApiService.apiService.createFoodLog(foodLog).enqueue(new Callback<FoodLog>() {
+            @Override
+            public void onResponse(Call<FoodLog> call, Response<FoodLog> response) {
+                Toast.makeText(FoodDetails.this, "Food logged!", Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onFailure(Call<FoodLog> call, Throwable t) {
+                Toast.makeText(FoodDetails.this, "Log failed!", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    private void CheckFavouriteFood() {
+       ApiService.apiService.getFavouriteFood(1, foodId).enqueue(new Callback<FavouriteFood>() {
+           @Override
+           public void onResponse(Call<FavouriteFood> call, Response<FavouriteFood> response) {
+               FavouriteFood favouriteFood = response.body();
+               if (response.isSuccessful() && favouriteFood != null) {
+
+                   btnFavourite.setImageResource(R.drawable.favourites);
+               } else {
+                   btnFavourite.setImageResource(R.drawable.unfavourite);
+               }
+           }
+
+           @Override
+           public void onFailure(Call<FavouriteFood> call, Throwable t) {
+                Log.e("Favourite Call", "Call Failed!");
+           }
+       });
+    }
 
    private void GetFoodInfo(int foodIndex) {
        Log.d("food index", String.valueOf(foodIndex));
@@ -96,7 +222,6 @@ public class FoodDetails extends AppCompatActivity {
            public void onResponse(Call<Food> call, Response<Food> response) {
                if (response.isSuccessful() && response.body() != null) {
                    Food food = response.body();
-//                   Log.d("Api res name", food.getName());
                    tvFoodName.setText(food.getName());
                    tvCaloriesValue.setText(String.valueOf(food.getCalories()));
                }
@@ -104,6 +229,87 @@ public class FoodDetails extends AppCompatActivity {
 
            @Override
            public void onFailure(Call<Food> call, Throwable t) {
+
+           }
+       });
+
+       ApiService.apiService.getMacro(foodIndex).enqueue(new Callback<Macronutrients>() {
+           @Override
+           public void onResponse(Call<Macronutrients> call, Response<Macronutrients> response) {
+               Macronutrients macro = response.body();
+
+               if (response.isSuccessful() && macro != null) {
+                   tvCarbsValue.setText(String.valueOf(macro.getCarbs()));
+                   tvProteinValue.setText(String.valueOf(macro.getProtein()));
+                   tvFatValue.setText(String.valueOf(macro.getFat()));
+
+                   tvFat.setText(macro.getFat() + " g");
+                   tvSaturateFat.setText(macro.getSaturatedFats() + " g");
+                   tvMonosaturateFat.setText(macro.getMonosaturatedFats() + " g");
+                   tvPolyunsaturateFat.setText(macro.getMonosaturatedFats() + " g");
+                   tvSugars.setText(macro.getSugars() + " g");
+                   tvDietaryFiber.setText(macro.getDietaryFiber() + " g");
+                   tvWater.setText(macro.getWater() + " g");
+                   tvCholesterol.setText(macro.getCholesterol() + " mg");
+                   tvSodium.setText(macro.getSodium() + " g");
+               }
+           }
+
+           @Override
+           public void onFailure(Call<Macronutrients> call, Throwable t) {
+
+           }
+       });
+
+       ApiService.apiService.getMineral(foodIndex).enqueue(new Callback<Minerals>() {
+           @Override
+           public void onResponse(Call<Minerals> call, Response<Minerals> response) {
+               Minerals minerals = response.body();
+
+               if (response.isSuccessful() && minerals != null) {
+                   tvCalcium.setText(minerals.getCalcium() + " mg");
+                   tvIron.setText(minerals.getIron() + " mg");
+                   tvPotassium.setText(minerals.getPotassium() + " mg");
+                   tvCopper.setText(minerals.getCopper() + " mg");
+                   tvMagnesium.setText(minerals.getMagnesium() + " mg");
+                   tvManganese.setText(minerals.getManganese() + " mg");
+                   tvPhosphorus.setText(minerals.getPhosphorus() + " mg");
+                   tvSelenium.setText(minerals.getSelenium() + " mg");
+                   tvZinc.setText(minerals.getZinc() + " mg");
+               }
+           }
+
+           @Override
+           public void onFailure(Call<Minerals> call, Throwable t) {
+
+           }
+       });
+
+       ApiService.apiService.getVitamin(foodIndex).enqueue(new Callback<Vitamins>() {
+           @Override
+           public void onResponse(Call<Vitamins> call, Response<Vitamins> response) {
+
+               Vitamins vitamins = response.body();
+
+               if (response.isSuccessful() && vitamins != null) {
+
+                   tvVitaminA.setText(vitamins.getVitaminA() + " mg");
+                   tvVitaminB1.setText(vitamins.getVitaminB1() + " mg");
+                   tvVitaminB11.setText(vitamins.getVitaminB11() + " mg");
+                   tvVitaminB12.setText(vitamins.getVitaminB12() + " mg");
+                   tvVitaminB2.setText(vitamins.getVitaminB2() + " mg");
+                   tvVitaminB3.setText(vitamins.getVitaminB3() + " mg");
+                   tvVitaminB5.setText(vitamins.getVitaminB5() + " mg");
+                   tvVitaminB6.setText(vitamins.getVitaminB6() + " mg");
+                   tvVitaminC.setText(vitamins.getVitaminC() + " mg");
+                   tvVitaminD.setText(vitamins.getVitaminD() + " mg");
+                   tvVitaminE.setText(vitamins.getVitaminE() + " mg");
+                   tvVitaminK.setText(vitamins.getVitaminK() + " mg");
+               }
+           }
+
+           @Override
+           public void onFailure(Call<Vitamins> call, Throwable t) {
 
            }
        });

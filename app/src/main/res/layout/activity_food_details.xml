@@ -30,7 +30,7 @@
             android:layout_height="48dp"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:contentDescription="Favorite"
-            android:src="@drawable/favourites"
+            android:src="@drawable/unfavourite"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -99,7 +99,7 @@
                 app:layout_constraintTop_toTopOf="parent">
 
                 <ImageView
-                    android:id="@+id/btn_minus"
+                    android:id="@+id/btnQuantityMinus"
                     android:layout_width="48dp"
                     android:layout_height="48dp"
                     android:contentDescription="Minus"
@@ -132,7 +132,7 @@
                 app:layout_constraintTop_toTopOf="parent">
 
                 <ImageView
-                    android:id="@+id/btn_add"
+                    android:id="@+id/btnQuantityAdd"
                     android:layout_width="48dp"
                     android:layout_height="48dp"
                     android:contentDescription="Increase"

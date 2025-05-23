@@ -27,6 +27,15 @@ public class FoodLog {
     @SerializedName("notes")
     private String notes;
 
+    public FoodLog(int userId, int foodId, int servingSize, String servingUnit, String mealType, String notes) {
+        this.userId = userId;
+        this.foodId = foodId;
+        this.servingSize = servingSize;
+        this.servingUnit = servingUnit;
+        this.mealType = mealType;
+        this.notes = notes;
+    }
+
     public int getId() {
         return id;
     }

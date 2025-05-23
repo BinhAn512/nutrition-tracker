@@ -6,6 +6,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
@@ -14,7 +15,9 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.test.adapters.FoodAdapter;
 import com.example.test.api.ApiService;
+import com.example.test.models.FavouriteFood;
 import com.example.test.models.Food;
+import com.example.test.models.FoodLog;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,11 +36,18 @@ public class FoodAdd extends AppCompatActivity implements FoodAdapter.OnFoodItem
     private TextView kcalValue;
     private Button btnAddSelection;
     List<Food> foods;
+    List<FavouriteFood> favouriteFoods;
+    public static int mealId;
+    int selectedFoodPosition;
+    Intent intent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.add_food);
+
+        intent = getIntent();
+        mealId = intent.getIntExtra("MEAL_ID", -1);
 
         // Initialize views
         foodListRecyclerView = findViewById(R.id.food_list);
@@ -47,6 +57,7 @@ public class FoodAdd extends AppCompatActivity implements FoodAdapter.OnFoodItem
         kcalValue = findViewById(R.id.kcal_value);
         btnAddSelection = findViewById(R.id.btn_add_selection);
         foods = new ArrayList<>();
+        favouriteFoods = new ArrayList<>();
 
         // Set up tab click listeners
         tabRecent.setOnClickListener(new View.OnClickListener() {
@@ -71,6 +82,7 @@ public class FoodAdd extends AppCompatActivity implements FoodAdapter.OnFoodItem
             public void onClick(View v) {
                 // Implement add functionality
                 // For example: add to meal plan, history, etc.
+                LogFood();
 
                 // Reset selection and hide container
                 foodAdapter.setSelectedPosition(-1);
@@ -80,7 +92,7 @@ public class FoodAdd extends AppCompatActivity implements FoodAdapter.OnFoodItem
 
         ImageButton btn_back = findViewById(R.id.btn_back);
         btn_back.setOnClickListener(v -> {
-            Intent intent = new Intent(this, HomeScreen.class);
+            intent = new Intent(this, HomeScreen.class);
             startActivity(intent);
             finish();
         });
@@ -97,6 +109,13 @@ public class FoodAdd extends AppCompatActivity implements FoodAdapter.OnFoodItem
         // Set active tab
         activeTab.setBackground(getResources().getDrawable(R.drawable.tab_background_selected));
         activeTab.setTextColor(getResources().getColor(android.R.color.black));
+
+        // Change list of food
+        if (activeTab.getId() == tabFavorites.getId()) {
+            FetchFavouriteFoodData();
+        } else {
+            FetchFoodData();
+        }
     }
 
     @Override
@@ -113,6 +132,7 @@ public class FoodAdd extends AppCompatActivity implements FoodAdapter.OnFoodItem
         // Update the add button text to show count
         btnAddSelection.setText("Add (1)");
 
+        selectedFoodPosition = position;
     }
 
     private void FetchFoodData() {
@@ -141,7 +161,63 @@ public class FoodAdd extends AppCompatActivity implements FoodAdapter.OnFoodItem
                 Log.e("Api Connection Failed", "Failed");
             }
         });
+    }
+
+    private void FetchFavouriteFoodData() {
+        // Set up RecyclerView
+        foodListRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+
+        // Example food data (sushi items based on the screenshot)
 
 
+//        foods.add(new Food("Sushi, Salmon (Sake)", 48, 30));
+//        foods.add(new Food("Sushi, Yellowtail (Hamachi)", 65, 30));
+//        foods.add(new Food("Sushi, Eel (Unagi)", 100, 35));
+
+        ApiService.apiService.getFavouriteFoods(1).enqueue(new Callback<List<Food>>() {
+            @Override
+            public void onResponse(Call<List<Food>> call, Response<List<Food>> response) {
+                foods = response.body();
+//                Log.d("Foods", String.valueOf(foods.get(1).getName()));
+                // Set up adapter
+                foodAdapter = new FoodAdapter(foods, FoodAdd.this);
+                foodListRecyclerView.setAdapter(foodAdapter);
+            }
+
+            @Override
+            public void onFailure(Call<List<Food>> call, Throwable t) {
+                Log.e("Api Connection Failed", "Failed");
+            }
+        });
+    }
+
+    public void LogFood() {
+        // Get Meal based on Meal Id
+        String meal;
+        if (mealId == 1) {
+            meal = "breakfast";
+        } else if (mealId == 2) {
+            meal = "lunch";
+        } else if (mealId == 3) {
+            meal = "dinner";
+        } else {
+            Toast.makeText(FoodAdd.this, "Invalid meal", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        Food selectedFood = foodAdapter.getSelectedItem();
+
+        FoodLog foodLog = new FoodLog(1, selectedFood.getId(),
+                1, "kg", meal, "");
+        ApiService.apiService.createFoodLog(foodLog).enqueue(new Callback<FoodLog>() {
+            @Override
+            public void onResponse(Call<FoodLog> call, Response<FoodLog> response) {
+                Toast.makeText(FoodAdd.this, "Food logged!", Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onFailure(Call<FoodLog> call, Throwable t) {
+                Toast.makeText(FoodAdd.this, "Log failed!", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 }

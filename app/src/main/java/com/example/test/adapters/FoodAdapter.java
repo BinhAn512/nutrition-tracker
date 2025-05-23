@@ -56,6 +56,10 @@ public class FoodAdapter extends RecyclerView.Adapter<FoodAdapter.FoodViewHolder
         return null;
     }
 
+    public Food getItemByPosition(int position) {
+        return foods.get(position);
+    }
+
     @NonNull
     @Override
     public FoodViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -94,7 +98,7 @@ public class FoodAdapter extends RecyclerView.Adapter<FoodAdapter.FoodViewHolder
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(v.getContext(), FoodDetails.class);
-                intent.putExtra("foodIndex", holder.getAdapterPosition() + 1);
+                intent.putExtra("foodId", item.getId());
 //                intent.putExtra("food_details", item.getCalories() + " kcal . " + item.getWeight() + " gram");
                 v.getContext().startActivity(intent);
             }
