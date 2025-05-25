@@ -70,6 +70,7 @@ public class FoodDetails extends AppCompatActivity {
     private ImageView btnDecrease;
     private TextView tvQuantity;
     private ImageButton btnFavourite;
+    private boolean isFavourite;
     int quantity;
     int foodId;
 
@@ -116,6 +117,53 @@ public class FoodDetails extends AppCompatActivity {
                tvQuantity.setText(String.valueOf(quantity));
            }
        });
+
+       btnFavourite.setOnClickListener(new View.OnClickListener() {
+           @Override
+           public void onClick(View v) {
+               isFavourite = !isFavourite;
+               if (isFavourite) {
+                   // Add to favourite list
+                   AddToFavourite();
+               } else {
+                   // Remove from favourite list
+                   RemoveFromFavourite();
+               }
+           }
+       });
+   }
+
+   private void AddToFavourite() {
+       FavouriteFood favouriteFood = new FavouriteFood(1, foodId);
+       ApiService.apiService.createFavouriteFood(favouriteFood).enqueue(new Callback<FavouriteFood>() {
+           @Override
+           public void onResponse(Call<FavouriteFood> call, Response<FavouriteFood> response) {
+               btnFavourite.setImageResource(R.drawable.favourites);
+               Toast.makeText(FoodDetails.this, "Favourite Food Added", Toast.LENGTH_SHORT).show();
+           }
+
+           @Override
+           public void onFailure(Call<FavouriteFood> call, Throwable t) {
+               Toast.makeText(FoodDetails.this, "Added Failed", Toast.LENGTH_SHORT).show();
+               Log.e("Favourite Add Failed", t.getMessage());
+           }
+       });
+   }
+
+   private void RemoveFromFavourite() {
+        ApiService.apiService.deleteFavouriteFood(1, foodId).enqueue(new Callback<FavouriteFood>() {
+            @Override
+            public void onResponse(Call<FavouriteFood> call, Response<FavouriteFood> response) {
+                btnFavourite.setImageResource(R.drawable.unfavourite);
+                Toast.makeText(FoodDetails.this, "Favourite Food Removed", Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onFailure(Call<FavouriteFood> call, Throwable t) {
+                Toast.makeText(FoodDetails.this, "Remove Failed", Toast.LENGTH_SHORT).show();
+                Log.e("Favourite Remove Failed", t.getMessage());
+            }
+        });
    }
 
    private void AssignView() {
@@ -201,15 +249,18 @@ public class FoodDetails extends AppCompatActivity {
            public void onResponse(Call<FavouriteFood> call, Response<FavouriteFood> response) {
                FavouriteFood favouriteFood = response.body();
                if (response.isSuccessful() && favouriteFood != null) {
-
+                    isFavourite = true;
                    btnFavourite.setImageResource(R.drawable.favourites);
                } else {
+                   isFavourite = false;
                    btnFavourite.setImageResource(R.drawable.unfavourite);
                }
            }
 
            @Override
            public void onFailure(Call<FavouriteFood> call, Throwable t) {
+                isFavourite = false;
+                btnFavourite.setImageResource(R.drawable.unfavourite);
                 Log.e("Favourite Call", "Call Failed!");
            }
        });

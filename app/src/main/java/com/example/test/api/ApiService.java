@@ -15,6 +15,7 @@ import retrofit2.Call;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 import retrofit2.http.Body;
+import retrofit2.http.DELETE;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
 import retrofit2.http.PUT;
@@ -51,6 +52,13 @@ public interface ApiService {
     @GET("favourite_food")
     Call<FavouriteFood> getFavouriteFood(@Query("user_id") int userId,
                                          @Query("food_id") int foodId);
+
+    @POST("favourite_food")
+    Call<FavouriteFood> createFavouriteFood(@Body FavouriteFood favouriteFood);
+
+    @DELETE("favourite_food")
+    Call<FavouriteFood> deleteFavouriteFood(@Query("user_id") int userId,
+                                            @Query("food_id") int foodId);
 
     @GET("food_log/{id}")
     Call<FoodLog> getFoodLog(@Path("id") int foodLogId);

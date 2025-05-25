@@ -12,6 +12,11 @@ public class FavouriteFood {
     @SerializedName("food_id")
     private int foodId;
 
+    public FavouriteFood(int userId, int foodId) {
+        this.userId = userId;
+        this.foodId = foodId;
+    }
+
     public int getId() {
         return id;
     }
