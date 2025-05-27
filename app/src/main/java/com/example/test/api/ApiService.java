@@ -18,7 +18,6 @@ import retrofit2.http.Body;
 import retrofit2.http.DELETE;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
-import retrofit2.http.PUT;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
 
@@ -52,22 +51,21 @@ public interface ApiService {
     @GET("favourite_food")
     Call<FavouriteFood> getFavouriteFood(@Query("user_id") int userId,
                                          @Query("food_id") int foodId);
-
     @POST("favourite_food")
     Call<FavouriteFood> createFavouriteFood(@Body FavouriteFood favouriteFood);
-
     @DELETE("favourite_food")
     Call<FavouriteFood> deleteFavouriteFood(@Query("user_id") int userId,
                                             @Query("food_id") int foodId);
 
     @GET("food_log/{id}")
     Call<FoodLog> getFoodLog(@Path("id") int foodLogId);
+    @GET("food_logs/food/{date}")
+    Call<List<Food>> getFoodByDate(@Path("date") String date);
+    @GET("food_logs/food")
+    Call<List<Food>> getFoodByMealDate(@Query("date") String date,
+                                       @Query("meal_type") String mealType);
+    @GET("food_logs/macro/{date}")
+    Call<List<Macronutrients>> getMacroByDate(@Path("date") String date);
     @POST("food_log")
     Call<FoodLog> createFoodLog(@Body FoodLog foodLog);
-//    Call<FoodLog> createFoodLog(@Query("user_id") int userId,
-//                                @Query("food_id") int foodId,
-//                                @Query("serving_size") float servingSize,
-//                                @Query("serving_unit") String servingUnit,
-//                                @Query("meal_type") String mealType,
-//                                @Query("notes") String notes);
 }

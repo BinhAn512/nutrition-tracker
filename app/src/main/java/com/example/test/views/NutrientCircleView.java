@@ -10,6 +10,7 @@ import android.view.View;
 
 public class NutrientCircleView extends View {
     private Paint circlePaint;
+    private Paint progressCirclePaint;
     private Paint textPaint;
     private Paint subTextPaint;
     private RectF rect;
@@ -37,6 +38,13 @@ public class NutrientCircleView extends View {
         circlePaint.setStyle(Paint.Style.STROKE);
         circlePaint.setStrokeWidth(6f);
         circlePaint.setColor(Color.LTGRAY);
+
+        // Progress circle (colored)
+        progressCirclePaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+        progressCirclePaint.setStyle(Paint.Style.STROKE);
+        progressCirclePaint.setStrokeWidth(12f);
+        progressCirclePaint.setColor(Color.parseColor("#4CAF50")); // Green color
+        progressCirclePaint.setStrokeCap(Paint.Cap.ROUND);
 
         textPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         textPaint.setStyle(Paint.Style.FILL);
@@ -69,14 +77,22 @@ public class NutrientCircleView extends View {
         float centerY = height / 2;
 
         // Draw circle
-        float radius = (Math.min(width, height) / 2) - circlePaint.getStrokeWidth();
+        float radius = (Math.min(width, height) / 2) - circlePaint.getStrokeWidth() / 2;
         rect.set(
                 centerX - radius,
                 centerY - radius,
                 centerX + radius,
                 centerY + radius
         );
-        canvas.drawArc(rect, 0f, 360f, false, circlePaint);
+
+        canvas.drawCircle(centerX, centerY, radius, circlePaint);
+//        canvas.drawArc(rect, 0f, 360f, false, circlePaint);
+
+        // Draw progress arc (based on nutrient amount)
+        if (nutrientTotal > 0) {
+            float sweepAngle = (360f * nutrientAmount) / nutrientTotal;
+            canvas.drawArc(rect, -90f, sweepAngle, false, progressCirclePaint);
+        }
 
         // Draw the nutrient text
         String nutrientText = String.valueOf(nutrientAmount);
