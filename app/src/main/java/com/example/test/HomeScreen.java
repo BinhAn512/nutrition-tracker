@@ -13,6 +13,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.test.adapters.MealAdapter;
 import com.example.test.api.ApiService;
 import com.example.test.models.Food;
+import com.example.test.models.FoodLog;
+import com.example.test.models.FoodNutrition;
 import com.example.test.models.Macronutrients;
 import com.example.test.views.CalorieCircleView;
 import com.example.test.views.NutrientCircleView;
@@ -128,38 +130,22 @@ public class HomeScreen extends AppCompatActivity implements MealAdapter.OnMealC
         dateTextView.setText(formattedDate);
 
         String dateData = dataDateFormat.format(currentDate.getTime());
-        ApiService.apiService.getFoodByDate(dateData).enqueue(new Callback<List<Food>>() {
+        ApiService.apiService.getFoodByDate(dateData).enqueue(new Callback<List<FoodNutrition>>() {
             @Override
-            public void onResponse(Call<List<Food>> call, Response<List<Food>> response) {
-                List<Food> foods = response.body();
+            public void onResponse(Call<List<FoodNutrition>> call, Response<List<FoodNutrition>> response) {
+                List<FoodNutrition> foods = response.body();
                 int totalCalories = 0;
-                if (response.isSuccessful() && foods != null) {
-                    for (Food food : foods) {
-                        totalCalories += food.getCalories();
-                    }
-                    eatenCaloriesTextView.setText(String.valueOf(totalCalories));
-                }
-            }
-
-            @Override
-            public void onFailure(Call<List<Food>> call, Throwable t) {
-
-            }
-        });
-
-        ApiService.apiService.getMacroByDate(dateData).enqueue(new Callback<List<Macronutrients>>() {
-            @Override
-            public void onResponse(Call<List<Macronutrients>> call, Response<List<Macronutrients>> response) {
-                List<Macronutrients> macros = response.body();
                 int totalCarbs = 0;
                 int totalProtein = 0;
                 int totalFat = 0;
-                if (response.isSuccessful() && macros != null) {
-                    for (Macronutrients macro : macros) {
-                        totalFat += macro.getFat();
-                        totalProtein += macro.getProtein();
-                        totalCarbs += macro.getCarbs();
+                if (response.isSuccessful() && foods != null) {
+                    for (FoodNutrition food : foods) {
+                        totalCalories += food.getCalories() * food.getServingSize();
+                        totalFat += food.getFat() * food.getServingSize();
+                        totalProtein += food.getProtein() * food.getServingSize();
+                        totalCarbs += food.getCarbs() * food.getServingSize();
                     }
+                    eatenCaloriesTextView.setText(String.valueOf(totalCalories));
                     carbsCircleView.setNutrientData(totalCarbs, 10);
                     proteinCircleView.setNutrientData(totalProtein, 100);
                     fatCircleView.setNutrientData(totalFat, 85);
@@ -168,10 +154,32 @@ public class HomeScreen extends AppCompatActivity implements MealAdapter.OnMealC
             }
 
             @Override
-            public void onFailure(Call<List<Macronutrients>> call, Throwable t) {
+            public void onFailure(Call<List<FoodNutrition>> call, Throwable t) {
 
             }
         });
+
+//        ApiService.apiService.getMacroByDate(dateData).enqueue(new Callback<List<Macronutrients>>() {
+//            @Override
+//            public void onResponse(Call<List<Macronutrients>> call, Response<List<Macronutrients>> response) {
+//                List<Macronutrients> macros = response.body();
+//                int totalCarbs = 0;
+//                int totalProtein = 0;
+//                int totalFat = 0;
+//                if (response.isSuccessful() && macros != null) {
+//                    for (Macronutrients macro : macros) {
+//                        totalFat += macro.getFat();
+//                        totalProtein += macro.getProtein();
+//                        totalCarbs += macro.getCarbs();
+//                    }
+//                }
+//            }
+//
+//            @Override
+//            public void onFailure(Call<List<Macronutrients>> call, Throwable t) {
+//
+//            }
+//        });
 
         ApiService.apiService.getFoodByMealDate(dateData, "breakfast").enqueue(new Callback<List<Food>>() {
             @Override
@@ -233,6 +241,10 @@ public class HomeScreen extends AppCompatActivity implements MealAdapter.OnMealC
         // Launch add food activity
         Intent intent = new Intent(this, FoodAdd.class);
         intent.putExtra("MEAL_ID", meal.getId());  // Truyền meal ID sang FoodAdd nếu cần
+
+        SimpleDateFormat dataDateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
+        String dateData = dataDateFormat.format(currentDate.getTime());
+        intent.putExtra("CURRENT_DATE", dateData);
         startActivity(intent);
     }
 

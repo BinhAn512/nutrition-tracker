@@ -27,12 +27,13 @@ public class FoodLog {
     @SerializedName("notes")
     private String notes;
 
-    public FoodLog(int userId, int foodId, int servingSize, String servingUnit, String mealType, String notes) {
+    public FoodLog(int userId, int foodId, int servingSize, String servingUnit, String mealType, String consumedAt, String notes) {
         this.userId = userId;
         this.foodId = foodId;
         this.servingSize = servingSize;
         this.servingUnit = servingUnit;
         this.mealType = mealType;
+        this.consumedAt = consumedAt;
         this.notes = notes;
     }
 
