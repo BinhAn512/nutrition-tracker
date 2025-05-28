@@ -37,37 +37,36 @@ public class ProfileScreen extends AppCompatActivity {
         });
 
         // Setup menu items click listeners
-        View dailyIntakeItem = findViewById(R.id.daily_intake_item);
-        View myMealsItem = findViewById(R.id.my_meals_item);
-        View nutritionReportItem = findViewById(R.id.nutrition_report_item);
-        View favoritesFoodItem = findViewById(R.id.favorites_food_item);
-        View logoutItem = findViewById(R.id.logout_item);
+        ImageButton dailyIntakeItem = findViewById(R.id.btn_daily_intake_arrow);
+        ImageButton nutritionReportItem = findViewById(R.id.btn_nutrition_report_arrow);
+        ImageButton favoritesFoodItem = findViewById(R.id.btn_favorites_food_arrow);
+        ImageButton logoutItem = findViewById(R.id.btn_logout_arrow);
 
         dailyIntakeItem.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // Navigate to Daily Intake screen
-            }
-        });
-
-        myMealsItem.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // Navigate to My Meals screen
+                Intent intent = new Intent(ProfileScreen.this, HomeScreen.class);
+                startActivity(intent);
+                finish();
             }
         });
 
         nutritionReportItem.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // Navigate to Nutrition Report screen
+                Intent intent = new Intent(ProfileScreen.this, InsightsScreen.class);
+                startActivity(intent);
+                finish();
             }
         });
 
         favoritesFoodItem.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // Navigate to Favorites Food screen
+                Intent intent = new Intent(ProfileScreen.this, FoodAdd.class);
+                intent.putExtra("SHOW_FAVORITES", true); // Gửi cờ hiển thị tab yêu thích
+                intent.putExtra("MEAL_ID", 1); // bạn có thể điều chỉnh MEAL_ID phù hợp
+                startActivity(intent);
             }
         });
 

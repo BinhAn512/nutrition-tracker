@@ -49,6 +49,12 @@ public class FoodAdd extends AppCompatActivity implements FoodAdapter.OnFoodItem
         intent = getIntent();
         mealId = intent.getIntExtra("MEAL_ID", -1);
 
+        boolean showFavorites = intent.getBooleanExtra("SHOW_FAVORITES", false);
+        if (showFavorites) {
+            setActiveTab(tabFavorites);
+        } else {
+            setActiveTab(tabRecent);
+        }
         // Initialize views
         foodListRecyclerView = findViewById(R.id.food_list);
         tabRecent = findViewById(R.id.tab_recent);
@@ -96,6 +102,8 @@ public class FoodAdd extends AppCompatActivity implements FoodAdapter.OnFoodItem
             startActivity(intent);
             finish();
         });
+
+
     }
 
     private void setActiveTab(TextView activeTab) {
