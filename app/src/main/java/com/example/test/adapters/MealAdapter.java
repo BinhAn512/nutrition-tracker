@@ -1,4 +1,4 @@
-package com.example.test;
+package com.example.test.adapters;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,6 +9,9 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.example.test.Meal;
+import com.example.test.R;
 
 import java.util.List;
 
@@ -29,14 +32,14 @@ public class MealAdapter extends RecyclerView.Adapter<MealAdapter.MealViewHolder
     public static class MealViewHolder extends RecyclerView.ViewHolder {
         ImageView mealIconImageView;
         TextView mealNameTextView;
-        TextView mealCaloriesTextView;
+//        TextView mealCaloriesTextView;
         ImageButton addFoodButton;
 
         public MealViewHolder(@NonNull View itemView) {
             super(itemView);
             mealIconImageView = itemView.findViewById(R.id.mealIconImageView);
             mealNameTextView = itemView.findViewById(R.id.mealNameTextView);
-            mealCaloriesTextView = itemView.findViewById(R.id.mealCaloriesTextView);
+//            mealCaloriesTextView = itemView.findViewById(R.id.mealCaloriesTextView);
             addFoodButton = itemView.findViewById(R.id.addFoodButton);
         }
     }
@@ -57,7 +60,7 @@ public class MealAdapter extends RecyclerView.Adapter<MealAdapter.MealViewHolder
         holder.mealNameTextView.setText(meal.getName());
 
         String caloriesText = meal.getTotalCalories() + " / " + meal.getMaxCalories() + " kcal";
-        holder.mealCaloriesTextView.setText(caloriesText);
+//        holder.mealCaloriesTextView.setText(caloriesText);
 
         holder.addFoodButton.setOnClickListener(v -> {
             if (mealClickListener != null) {

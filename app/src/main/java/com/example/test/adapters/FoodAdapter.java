@@ -1,5 +1,6 @@
-package com.example.test;
+package com.example.test.adapters;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.content.Intent;
@@ -11,20 +12,24 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.test.models.Food;
+import com.example.test.FoodDetails;
+import com.example.test.R;
+
 import java.util.List;
 
 public class FoodAdapter extends RecyclerView.Adapter<FoodAdapter.FoodViewHolder> {
 
-    private List<FoodItem> foodItems;
+    private List<Food> foods;
     private OnFoodItemClickListener listener;
     private int selectedPosition = -1;
 
     public interface OnFoodItemClickListener {
-        void onFoodItemClick(FoodItem item, int position);
+        void onFoodItemClick(Food item, int position);
     }
 
-    public FoodAdapter(List<FoodItem> foodItems, OnFoodItemClickListener listener) {
-        this.foodItems = foodItems;
+    public FoodAdapter(List<Food> foods, OnFoodItemClickListener listener) {
+        this.foods = foods;
         this.listener = listener;
     }
 
@@ -44,11 +49,15 @@ public class FoodAdapter extends RecyclerView.Adapter<FoodAdapter.FoodViewHolder
         return selectedPosition;
     }
 
-    public FoodItem getSelectedItem() {
-        if (selectedPosition != -1 && selectedPosition < foodItems.size()) {
-            return foodItems.get(selectedPosition);
+    public Food getSelectedItem() {
+        if (selectedPosition != -1 && selectedPosition < foods.size()) {
+            return foods.get(selectedPosition);
         }
         return null;
+    }
+
+    public Food getItemByPosition(int position) {
+        return foods.get(position);
     }
 
     @NonNull
@@ -60,9 +69,10 @@ public class FoodAdapter extends RecyclerView.Adapter<FoodAdapter.FoodViewHolder
 
     @Override
     public void onBindViewHolder(@NonNull FoodViewHolder holder, int position) {
-        FoodItem item = foodItems.get(position);
+        Food item = foods.get(position);
         holder.foodName.setText(item.getName());
-        holder.foodDetails.setText(item.getCalories() + " kcal . " + item.getWeight() + " gram");
+        Log.d("Food View Name", item.getName());
+//        holder.foodDetails.setText(item.getCalories() + " kcal . " + item.getWeight() + " gram");
 
         // Set selected state
         if (position == selectedPosition) {
@@ -88,8 +98,8 @@ public class FoodAdapter extends RecyclerView.Adapter<FoodAdapter.FoodViewHolder
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(v.getContext(), FoodDetails.class);
-                intent.putExtra("food_name", item.getName());
-                intent.putExtra("food_details", item.getCalories() + " kcal . " + item.getWeight() + " gram");
+                intent.putExtra("foodId", item.getId());
+//                intent.putExtra("food_details", item.getCalories() + " kcal . " + item.getWeight() + " gram");
                 v.getContext().startActivity(intent);
             }
         });
@@ -97,7 +107,7 @@ public class FoodAdapter extends RecyclerView.Adapter<FoodAdapter.FoodViewHolder
 
     @Override
     public int getItemCount() {
-        return foodItems.size();
+        return foods.size();
     }
 
     static class FoodViewHolder extends RecyclerView.ViewHolder {

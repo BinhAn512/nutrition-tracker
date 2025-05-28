@@ -10,13 +10,23 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.test.adapters.MealAdapter;
+import com.example.test.api.ApiService;
+import com.example.test.models.Food;
+import com.example.test.models.Macronutrients;
+import com.example.test.views.CalorieCircleView;
+import com.example.test.views.NutrientCircleView;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
+import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class HomeScreen extends AppCompatActivity implements MealAdapter.OnMealClickListener {
 
@@ -28,6 +38,7 @@ public class HomeScreen extends AppCompatActivity implements MealAdapter.OnMealC
     private NutrientCircleView fatCircleView;
     private RecyclerView mealsRecyclerView;
     private MealAdapter mealAdapter;
+    private Calendar currentDate;
 
     private DailyNutrition dailyNutrition;
 
@@ -83,10 +94,11 @@ public class HomeScreen extends AppCompatActivity implements MealAdapter.OnMealC
     }
 
     private void setupDateControls() {
+        currentDate = Calendar.getInstance();
+
         // Set current date
-        SimpleDateFormat dateFormat = new SimpleDateFormat("MMM dd", Locale.getDefault());
-        String today = "Today, " + dateFormat.format(new Date());
-        dateTextView.setText(today);
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
+        updateDateData();
 
         // Set date navigation
         ImageButton prevDateButton = findViewById(R.id.prevDateButton);
@@ -95,12 +107,91 @@ public class HomeScreen extends AppCompatActivity implements MealAdapter.OnMealC
         prevDateButton.setOnClickListener(v -> {
             Toast.makeText(HomeScreen.this, "Previous day", Toast.LENGTH_SHORT).show();
             // Implement date change logic here
+            currentDate.add(Calendar.DAY_OF_MONTH, -1);
+            updateDateData();
         });
 
         nextDateButton.setOnClickListener(v -> {
             Toast.makeText(HomeScreen.this, "Next day", Toast.LENGTH_SHORT).show();
             // Implement date change logic here
+            currentDate.add(Calendar.DAY_OF_MONTH, +1);
+            updateDateData();
         });
+    }
+
+    // Hàm cập nhật ngày lên TextView
+    private void updateDateData() {
+        // Update time
+        SimpleDateFormat dataDateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
+        SimpleDateFormat displayDateFormat = new SimpleDateFormat(" EEEE, dd MMM", Locale.getDefault());
+        String formattedDate = displayDateFormat.format(currentDate.getTime());
+        dateTextView.setText(formattedDate);
+
+        String dateData = dataDateFormat.format(currentDate.getTime());
+        ApiService.apiService.getFoodByDate(dateData).enqueue(new Callback<List<Food>>() {
+            @Override
+            public void onResponse(Call<List<Food>> call, Response<List<Food>> response) {
+                List<Food> foods = response.body();
+                int totalCalories = 0;
+                if (response.isSuccessful() && foods != null) {
+                    for (Food food : foods) {
+                        totalCalories += food.getCalories();
+                    }
+                    eatenCaloriesTextView.setText(String.valueOf(totalCalories));
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<Food>> call, Throwable t) {
+
+            }
+        });
+
+        ApiService.apiService.getMacroByDate(dateData).enqueue(new Callback<List<Macronutrients>>() {
+            @Override
+            public void onResponse(Call<List<Macronutrients>> call, Response<List<Macronutrients>> response) {
+                List<Macronutrients> macros = response.body();
+                int totalCarbs = 0;
+                int totalProtein = 0;
+                int totalFat = 0;
+                if (response.isSuccessful() && macros != null) {
+                    for (Macronutrients macro : macros) {
+                        totalFat += macro.getFat();
+                        totalProtein += macro.getProtein();
+                        totalCarbs += macro.getCarbs();
+                    }
+                    carbsCircleView.setNutrientData(totalCarbs, 10);
+                    proteinCircleView.setNutrientData(totalProtein, 100);
+                    fatCircleView.setNutrientData(totalFat, 85);
+                    calorieCircleView.setCalorieData(totalCarbs, 2560);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<Macronutrients>> call, Throwable t) {
+
+            }
+        });
+
+        ApiService.apiService.getFoodByMealDate(dateData, "breakfast").enqueue(new Callback<List<Food>>() {
+            @Override
+            public void onResponse(Call<List<Food>> call, Response<List<Food>> response) {
+                List<Food> foods = response.body();
+                int totalCalories = 0;
+                if (response.isSuccessful() && foods != null) {
+                    for (Food food : foods) {
+                        totalCalories += food.getCalories();
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<Food>> call, Throwable t) {
+
+            }
+        });
+        // Update nutritions data in that day
+
     }
 
     private void initData() {
@@ -125,16 +216,16 @@ public class HomeScreen extends AppCompatActivity implements MealAdapter.OnMealC
 
     private void updateUI() {
         // Update calorie stats
-        int totalCalories = dailyNutrition.getTotalCalories();
-        eatenCaloriesTextView.setText(String.valueOf(totalCalories));
+//        int totalCalories = dailyNutrition.getTotalCalories();
+//        eatenCaloriesTextView.setText(String.valueOf(totalCalories));
 
         // Update the main calorie circle
-        calorieCircleView.setCaloriesLeft(dailyNutrition.getCaloriesLeft());
+//        calorieCircleView.setCaloriesLeft(dailyNutrition.getCaloriesLeft());
 
         // Update nutrient circles
-        carbsCircleView.setNutrientData(dailyNutrition.getTotalCarbs(), 224);
-        proteinCircleView.setNutrientData(dailyNutrition.getTotalProtein(), 98);
-        fatCircleView.setNutrientData(dailyNutrition.getTotalFat(), 85);
+//        carbsCircleView.setNutrientData(dailyNutrition.getTotalCarbs(), 224);
+//        proteinCircleView.setNutrientData(dailyNutrition.getTotalProtein(), 98);
+//        fatCircleView.setNutrientData(dailyNutrition.getTotalFat(), 85);
     }
 
     @Override

@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@android:color/white"
-    tools:context=".StartScreenActivity">
+    tools:context=".activities.StartScreenActivity">
 
     <TextView
         android:id="@+id/iv_logo"
