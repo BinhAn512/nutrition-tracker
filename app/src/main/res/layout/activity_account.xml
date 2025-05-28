@@ -64,16 +64,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/top_bar" />
 
-    <ImageView
-        android:id="@+id/edit_profile_icon"
-        android:layout_width="24dp"
-        android:layout_height="24dp"
-        android:background="@drawable/circle_background"
-        android:padding="4dp"
-        android:src="@drawable/ic_edit"
-        android:contentDescription="Edit profile"
-        app:layout_constraintBottom_toBottomOf="@id/profile_image"
-        app:layout_constraintEnd_toEndOf="@id/profile_image" />
 
     <TextView
         android:id="@+id/profile_name"
@@ -139,15 +129,15 @@
                     android:textColor="@color/black"
                     android:textSize="16sp"
                     app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toStartOf="@id/daily_intake_arrow"
+                    app:layout_constraintEnd_toStartOf="@id/btn_daily_intake_arrow"
                     app:layout_constraintStart_toEndOf="@id/daily_intake_icon"
                     app:layout_constraintTop_toTopOf="parent" />
 
-                <ImageView
-                    android:id="@+id/daily_intake_arrow"
+                <ImageButton
+                    android:id="@+id/btn_daily_intake_arrow"
                     android:layout_width="24dp"
                     android:layout_height="24dp"
-                    android:src="@drawable/ic_arrow_right"
+                    android:background="@drawable/ic_arrow_right"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
@@ -159,45 +149,6 @@
                 android:layout_height="1dp"
                 android:background="@color/black" />
 
-            <!-- My Meals -->
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/my_meals_item"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:paddingVertical="12dp">
-
-                <ImageView
-                    android:id="@+id/my_meals_icon"
-                    android:layout_width="36dp"
-                    android:layout_height="36dp"
-                    android:padding="8dp"
-                    android:src="@drawable/ic_meal"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
-
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="16dp"
-                    android:text="My Meals"
-                    android:textColor="@color/black"
-                    android:textSize="16sp"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toStartOf="@id/my_meals_arrow"
-                    app:layout_constraintStart_toEndOf="@id/my_meals_icon"
-                    app:layout_constraintTop_toTopOf="parent" />
-
-                <ImageView
-                    android:id="@+id/my_meals_arrow"
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
-                    android:src="@drawable/ic_arrow_right"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
-
-            </androidx.constraintlayout.widget.ConstraintLayout>
 
             <View
                 android:layout_width="match_parent"
@@ -229,15 +180,15 @@
                     android:textColor="@color/black"
                     android:textSize="16sp"
                     app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toStartOf="@id/nutrition_report_arrow"
+                    app:layout_constraintEnd_toStartOf="@id/btn_nutrition_report_arrow"
                     app:layout_constraintStart_toEndOf="@id/nutrition_report_icon"
                     app:layout_constraintTop_toTopOf="parent" />
 
-                <ImageView
-                    android:id="@+id/nutrition_report_arrow"
+                <ImageButton
+                    android:id="@+id/btn_nutrition_report_arrow"
                     android:layout_width="24dp"
                     android:layout_height="24dp"
-                    android:src="@drawable/ic_arrow_right"
+                    android:background="@drawable/ic_arrow_right"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
@@ -274,15 +225,15 @@
                     android:textColor="@color/black"
                     android:textSize="16sp"
                     app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toStartOf="@id/favorites_food_arrow"
+                    app:layout_constraintEnd_toStartOf="@id/btn_favorites_food_arrow"
                     app:layout_constraintStart_toEndOf="@id/favorites_food_icon"
                     app:layout_constraintTop_toTopOf="parent" />
 
-                <ImageView
-                    android:id="@+id/favorites_food_arrow"
+                <ImageButton
+                    android:id="@+id/btn_favorites_food_arrow"
                     android:layout_width="24dp"
                     android:layout_height="24dp"
-                    android:src="@drawable/ic_arrow_right"
+                    android:background="@drawable/ic_arrow_right"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
@@ -319,15 +270,15 @@
                     android:textColor="@color/black"
                     android:textSize="16sp"
                     app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toStartOf="@id/logout_arrow"
+                    app:layout_constraintEnd_toStartOf="@id/btn_logout_arrow"
                     app:layout_constraintStart_toEndOf="@id/logout_icon"
                     app:layout_constraintTop_toTopOf="parent" />
 
-                <ImageView
-                    android:id="@+id/logout_arrow"
+                <ImageButton
+                    android:id="@+id/btn_logout_arrow"
                     android:layout_width="24dp"
                     android:layout_height="24dp"
-                    android:src="@drawable/ic_arrow_right"
+                    android:background="@drawable/ic_arrow_right"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
