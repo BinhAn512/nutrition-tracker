@@ -6,6 +6,7 @@ import com.example.test.models.FoodLog;
 import com.example.test.models.FoodNutrition;
 import com.example.test.models.Macronutrients;
 import com.example.test.models.Minerals;
+import com.example.test.models.User;
 import com.example.test.models.Vitamins;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -71,4 +72,8 @@ public interface ApiService {
     Call<List<Macronutrients>> getMacroByDate(@Path("date") String date);
     @POST("food_log")
     Call<FoodLog> createFoodLog(@Body FoodLog foodLog);
+
+    @GET("user")
+    Call<User> getUserInfo(@Query("username") String username,
+                           @Query("password") String password);
 }

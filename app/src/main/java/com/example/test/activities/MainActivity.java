@@ -9,15 +9,19 @@ import android.text.TextUtils;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
-import android.widget.Button;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.test.HomeScreen;
 import com.example.test.R;
+import com.example.test.api.ApiService;
+import com.example.test.models.User;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class MainActivity extends AppCompatActivity {
     private TextInputLayout tilEmail, tilPassword;
@@ -42,7 +46,7 @@ public class MainActivity extends AppCompatActivity {
     private void initViews() {
         tilEmail = findViewById(R.id.til_email);
         tilPassword = findViewById(R.id.til_password);
-        etEmail = findViewById(R.id.et_email);
+        etEmail = findViewById(R.id.et_username);
         etPassword = findViewById(R.id.et_password);
         btnLogin = findViewById(R.id.btn_login);
         btnRegister = findViewById(R.id.btn_register);
@@ -85,8 +89,8 @@ public class MainActivity extends AppCompatActivity {
             return;
         }
 
-        if (password.length() < 6) {
-            tilPassword.setError("Mật khẩu phải có ít nhất 6 ký tự");
+        if (password.length() < 4) {
+            tilPassword.setError("Mật khẩu phải có ít nhất 4 ký tự");
             etPassword.requestFocus();
             return;
         }
@@ -100,25 +104,37 @@ public class MainActivity extends AppCompatActivity {
         simulateLogin(username, password);
     }
 
-    private void simulateLogin(String email, String password) {
+    private void simulateLogin(String username, String password) {
         // Simulate network delay
         new android.os.Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
                 // Reset button state
                 btnLogin.setEnabled(true);
-                btnLogin.setText("Đăng nhập");
+                btnLogin.setText("Login");
 
                 // TODO: Replace with actual authentication
-                if (email.equals("test@example.com") && password.equals("123456")) {
-                    Toast.makeText(MainActivity.this, "Đăng nhập thành công!", Toast.LENGTH_SHORT).show();
-                    // Navigate to main activity
-                    Intent intent = new Intent(MainActivity.this, HomeScreen.class);
-                    startActivity(intent);
-                    finish();
-                } else {
-                    Toast.makeText(MainActivity.this, "Email hoặc mật khẩu không đúng", Toast.LENGTH_SHORT).show();
-                }
+                ApiService.apiService.getUserInfo(username, password).enqueue(new Callback<User>() {
+                    @Override
+                    public void onResponse(Call<User> call, Response<User> response) {
+                        User user = response.body();
+                        if (response.isSuccessful() && user != null) {
+                            Toast.makeText(MainActivity.this, "Đăng nhập thành công!", Toast.LENGTH_SHORT).show();
+                            // Navigate to main activity
+                            Intent intent = new Intent(MainActivity.this, HomeScreen.class);
+                            intent.putExtra("USER_ID", user.getId());
+                            startActivity(intent);
+                            finish();
+                        } else {
+                            Toast.makeText(MainActivity.this, "Username hoặc mật khẩu không đúng", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<User> call, Throwable t) {
+//                        Toast.makeText(MainActivity.this, "Username hoặc mật khẩu không đúng", Toast.LENGTH_SHORT).show();
+                    }
+                });
             }
         }, 1500);
     }
