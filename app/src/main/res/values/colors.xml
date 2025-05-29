@@ -140,4 +140,24 @@
     <color name="DarkBlue">#00008B</color>
     <color name="Navy">#000080</color>
     <color name="black">#000000</color>
+    <!-- Primary Colors -->
+    <color name="primary_green">#8BC34A</color>
+    <color name="primary_green_dark">#689F38</color>
+    <color name="primary_green_light">#DCEDC8</color>
+
+    <!-- Background Colors -->
+    <color name="background_light_green">#F1F8E9</color>
+    <color name="background_white">#FFFFFF</color>
+
+    <!-- Text Colors -->
+    <color name="text_dark">#2E2E2E</color>
+    <color name="text_gray">#757575</color>
+    <color name="text_light_gray">#BDBDBD</color>
+
+    <!-- Other Colors -->
+    <color name="divider_color">#E0E0E0</color>
+    <color name="accent_color">#FF7043</color>
+
+    <!-- Status Bar -->
+    <color name="status_bar_color">#689F38</color>
 </resources>

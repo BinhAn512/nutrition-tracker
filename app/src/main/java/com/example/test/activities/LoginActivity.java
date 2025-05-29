@@ -1,17 +1,15 @@
 package com.example.test.activities;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.content.ContextCompat;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
-import android.widget.Button;
-import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 
 import com.example.test.HomeScreen;
 import com.example.test.R;
@@ -19,7 +17,7 @@ import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 
-public class MainActivity extends AppCompatActivity {
+public class LoginActivity extends AppCompatActivity {
     private TextInputLayout tilEmail, tilPassword;
     private TextInputEditText etEmail, etPassword;
     private MaterialButton btnLogin, btnRegister;
@@ -111,13 +109,13 @@ public class MainActivity extends AppCompatActivity {
 
                 // TODO: Replace with actual authentication
                 if (email.equals("test@example.com") && password.equals("123456")) {
-                    Toast.makeText(MainActivity.this, "Đăng nhập thành công!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(LoginActivity.this, "Đăng nhập thành công!", Toast.LENGTH_SHORT).show();
                     // Navigate to main activity
-                    Intent intent = new Intent(MainActivity.this, HomeScreen.class);
+                    Intent intent = new Intent(LoginActivity.this, HomeScreen.class);
                     startActivity(intent);
                     finish();
                 } else {
-                    Toast.makeText(MainActivity.this, "Email hoặc mật khẩu không đúng", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(LoginActivity.this, "Email hoặc mật khẩu không đúng", Toast.LENGTH_SHORT).show();
                 }
             }
         }, 1500);
@@ -125,7 +123,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void handleRegister() {
         // TODO: Navigate to register activity
-        Intent intent = new Intent(MainActivity.this, StartScreenActivity.class);
+        Intent intent = new Intent(LoginActivity.this, StartScreenActivity.class);
         startActivity(intent);
     }
 }
