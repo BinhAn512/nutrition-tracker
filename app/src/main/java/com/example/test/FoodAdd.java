@@ -20,6 +20,7 @@ import com.example.test.models.Food;
 import com.example.test.models.FoodLog;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 import retrofit2.Call;
@@ -38,6 +39,7 @@ public class FoodAdd extends AppCompatActivity implements FoodAdapter.OnFoodItem
     List<Food> foods;
     List<FavouriteFood> favouriteFoods;
     public static int mealId;
+    public static String dateData;
     int selectedFoodPosition;
     Intent intent;
 
@@ -47,6 +49,8 @@ public class FoodAdd extends AppCompatActivity implements FoodAdapter.OnFoodItem
         setContentView(R.layout.add_food);
 
         intent = getIntent();
+        // add day selected
+        dateData = intent.getStringExtra("CURRENT_DATE");
         mealId = intent.getIntExtra("MEAL_ID", -1);
 
         boolean showFavorites = intent.getBooleanExtra("SHOW_FAVORITES", false);
@@ -215,7 +219,7 @@ public class FoodAdd extends AppCompatActivity implements FoodAdapter.OnFoodItem
         Food selectedFood = foodAdapter.getSelectedItem();
 
         FoodLog foodLog = new FoodLog(1, selectedFood.getId(),
-                1, "kg", meal, "");
+                1, "kg", meal, dateData, "");
         ApiService.apiService.createFoodLog(foodLog).enqueue(new Callback<FoodLog>() {
             @Override
             public void onResponse(Call<FoodLog> call, Response<FoodLog> response) {

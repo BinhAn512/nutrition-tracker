@@ -3,6 +3,7 @@ package com.example.test.api;
 import com.example.test.models.FavouriteFood;
 import com.example.test.models.Food;
 import com.example.test.models.FoodLog;
+import com.example.test.models.FoodNutrition;
 import com.example.test.models.Macronutrients;
 import com.example.test.models.Minerals;
 import com.example.test.models.Vitamins;
@@ -59,8 +60,10 @@ public interface ApiService {
 
     @GET("food_log/{id}")
     Call<FoodLog> getFoodLog(@Path("id") int foodLogId);
+    @GET("food_logs/{date}")
+    Call<List<FoodLog>> getFoodLogByDate(@Path("date") String date);
     @GET("food_logs/food/{date}")
-    Call<List<Food>> getFoodByDate(@Path("date") String date);
+    Call<List<FoodNutrition>> getFoodByDate(@Path("date") String date);
     @GET("food_logs/food")
     Call<List<Food>> getFoodByMealDate(@Query("date") String date,
                                        @Query("meal_type") String mealType);

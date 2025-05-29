@@ -1,6 +1,7 @@
 package com.example.test;
 
 import static com.example.test.FoodAdd.mealId;
+import static com.example.test.FoodAdd.dateData;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -229,7 +230,7 @@ public class FoodDetails extends AppCompatActivity {
         }
 
         FoodLog foodLog = new FoodLog(1, foodId,
-                Integer.valueOf(tvQuantity.getText().toString()), "kg", meal, "");
+                Integer.valueOf(tvQuantity.getText().toString()), "kg", meal, dateData, "");
         ApiService.apiService.createFoodLog(foodLog).enqueue(new Callback<FoodLog>() {
             @Override
             public void onResponse(Call<FoodLog> call, Response<FoodLog> response) {
