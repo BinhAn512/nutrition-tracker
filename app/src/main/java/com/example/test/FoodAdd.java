@@ -53,12 +53,6 @@ public class FoodAdd extends AppCompatActivity implements FoodAdapter.OnFoodItem
         dateData = intent.getStringExtra("CURRENT_DATE");
         mealId = intent.getIntExtra("MEAL_ID", -1);
 
-        boolean showFavorites = intent.getBooleanExtra("SHOW_FAVORITES", false);
-        if (showFavorites) {
-            setActiveTab(tabFavorites);
-        } else {
-            setActiveTab(tabRecent);
-        }
         // Initialize views
         foodListRecyclerView = findViewById(R.id.food_list);
         tabRecent = findViewById(R.id.tab_recent);
@@ -68,6 +62,13 @@ public class FoodAdd extends AppCompatActivity implements FoodAdapter.OnFoodItem
         btnAddSelection = findViewById(R.id.btn_add_selection);
         foods = new ArrayList<>();
         favouriteFoods = new ArrayList<>();
+
+        boolean showFavorites = intent.getBooleanExtra("SHOW_FAVORITES", false);
+        if (showFavorites) {
+            setActiveTab(tabFavorites);
+        } else {
+            setActiveTab(tabRecent);
+        }
 
         // Set up tab click listeners
         tabRecent.setOnClickListener(new View.OnClickListener() {
@@ -84,7 +85,7 @@ public class FoodAdd extends AppCompatActivity implements FoodAdapter.OnFoodItem
             }
         });
 
-        FetchFoodData();
+//        FetchFoodData();
 
         // Set click listener for Add button
         btnAddSelection.setOnClickListener(new View.OnClickListener() {
