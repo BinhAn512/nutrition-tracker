@@ -3,6 +3,7 @@ package com.example.test;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -35,46 +36,53 @@ public class InsightsScreen extends AppCompatActivity {
         // Initialize views
         calorieBarChart = findViewById(R.id.calorieBarChart);
         nutritionStackedBarChart = findViewById(R.id.nutritionStackedBarChart);
-        tvWeekly = findViewById(R.id.tvWeekly);
-        tvMonthly = findViewById(R.id.tvMonthly);
-        tvYearly = findViewById(R.id.tvYearly);
+//        tvWeekly = findViewById(R.id.tvWeekly);
+//        tvMonthly = findViewById(R.id.tvMonthly);
+//        tvYearly = findViewById(R.id.tvYearly);
 
         // Set up tab selection
-        tvWeekly.setOnClickListener(v -> selectTab(tvWeekly));
-        tvMonthly.setOnClickListener(v -> selectTab(tvMonthly));
-        tvYearly.setOnClickListener(v -> selectTab(tvYearly));
+//        tvWeekly.setOnClickListener(v -> selectTab(tvWeekly));
+//        tvMonthly.setOnClickListener(v -> selectTab(tvMonthly));
+//        tvYearly.setOnClickListener(v -> selectTab(tvYearly));
 
         // Initialize charts
         setupCalorieChart();
         setupNutritionChart();
         setupNavigationView();
+
+        ImageButton btn_account = findViewById(R.id.btn_ivLogo);
+        btn_account.setOnClickListener(v -> {
+            Intent intent = new Intent(this, ProfileScreen.class);
+            startActivity(intent);
+            finish();
+        });
     }
 
-    private void selectTab(TextView selectedTab) {
-        // Reset all tabs
-        tvWeekly.setBackgroundResource(R.drawable.rounded_button_unselected);
-        tvWeekly.setTextColor(Color.BLACK);
-        tvMonthly.setBackgroundResource(R.drawable.rounded_button_unselected);
-        tvMonthly.setTextColor(Color.BLACK);
-        tvYearly.setBackgroundResource(R.drawable.rounded_button_unselected);
-        tvYearly.setTextColor(Color.BLACK);
-
-        // Set selected tab
-        selectedTab.setBackgroundResource(R.drawable.rounded_button_selected);
-        selectedTab.setTextColor(Color.WHITE);
-
-        // Update charts based on selected tab
-        if (selectedTab == tvWeekly) {
-            setupCalorieChart();
-            setupNutritionChart();
-        } else if (selectedTab == tvMonthly) {
-            // Setup monthly data
-            // This would be implemented based on your data source
-        } else {
-            // Setup yearly data
-            // This would be implemented based on your data source
-        }
-    }
+//    private void selectTab(TextView selectedTab) {
+//        // Reset all tabs
+//        tvWeekly.setBackgroundResource(R.drawable.rounded_button_unselected);
+//        tvWeekly.setTextColor(Color.BLACK);
+//        tvMonthly.setBackgroundResource(R.drawable.rounded_button_unselected);
+//        tvMonthly.setTextColor(Color.BLACK);
+//        tvYearly.setBackgroundResource(R.drawable.rounded_button_unselected);
+//        tvYearly.setTextColor(Color.BLACK);
+//
+//        // Set selected tab
+//        selectedTab.setBackgroundResource(R.drawable.rounded_button_selected);
+//        selectedTab.setTextColor(Color.WHITE);
+//
+//        // Update charts based on selected tab
+//        if (selectedTab == tvWeekly) {
+//            setupCalorieChart();
+//            setupNutritionChart();
+//        } else if (selectedTab == tvMonthly) {
+//            // Setup monthly data
+//            // This would be implemented based on your data source
+//        } else {
+//            // Setup yearly data
+//            // This would be implemented based on your data source
+//        }
+//    }
 
     private void setupCalorieChart() {
         calorieBarChart.getDescription().setEnabled(false);

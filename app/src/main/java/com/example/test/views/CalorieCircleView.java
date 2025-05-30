@@ -55,7 +55,7 @@ public class CalorieCircleView extends View {
         subTextPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         subTextPaint.setStyle(Paint.Style.FILL);
         subTextPaint.setColor(Color.GRAY);
-        subTextPaint.setTextSize(20f);
+        subTextPaint.setTextSize(30f);
         subTextPaint.setTextAlign(Paint.Align.CENTER);
 
         rect = new RectF();

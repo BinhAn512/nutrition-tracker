@@ -18,23 +18,23 @@ public class ProfileScreen extends AppCompatActivity {
         setContentView(R.layout.activity_account);
 
         // Setup toolbar/header back button
-        ImageButton backButton = findViewById(R.id.back_button);
-        backButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
-            }
-        });
-
-        // Setup settings button
-        ImageView settingsButton = findViewById(R.id.settings_button);
-        settingsButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // Handle settings click
-                // Add your settings logic here
-            }
-        });
+//        ImageButton backButton = findViewById(R.id.back_button);
+//        backButton.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                finish();
+//            }
+//        });
+//
+//        // Setup settings button
+//        ImageView settingsButton = findViewById(R.id.settings_button);
+//        settingsButton.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                // Handle settings click
+//                // Add your settings logic here
+//            }
+//        });
 
         // Setup menu items click listeners
         ImageButton dailyIntakeItem = findViewById(R.id.btn_daily_intake_arrow);

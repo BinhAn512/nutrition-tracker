@@ -49,13 +49,13 @@ public class NutrientCircleView extends View {
         textPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         textPaint.setStyle(Paint.Style.FILL);
         textPaint.setColor(Color.BLACK);
-        textPaint.setTextSize(20f);
+        textPaint.setTextSize(35f);
         textPaint.setTextAlign(Paint.Align.CENTER);
 
         subTextPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         subTextPaint.setStyle(Paint.Style.FILL);
         subTextPaint.setColor(Color.GRAY);
-        subTextPaint.setTextSize(14f);
+        subTextPaint.setTextSize(20f);
         subTextPaint.setTextAlign(Paint.Align.CENTER);
 
         rect = new RectF();
