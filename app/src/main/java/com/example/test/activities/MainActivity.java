@@ -141,7 +141,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void handleRegister() {
         // TODO: Navigate to register activity
-        Intent intent = new Intent(MainActivity.this, StartScreenActivity.class);
+        Intent intent = new Intent(MainActivity.this, RegisterActivity.class);
         startActivity(intent);
     }
 }

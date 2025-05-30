@@ -76,4 +76,8 @@ public interface ApiService {
     @GET("user")
     Call<User> getUserInfo(@Query("username") String username,
                            @Query("password") String password);
+    @GET("user/{username}")
+    Call<User> getUserByUsername(@Path("username") String username);
+    @POST("user")
+    Call<User> createUser(@Body User user);
 }
