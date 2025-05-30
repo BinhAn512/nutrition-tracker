@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.SnapHelper;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
@@ -34,12 +35,16 @@ public class AgeSelectActivity extends AppCompatActivity implements AgeAdapter.O
         // Setup age picker
         setupAgePicker();
 
+        Bundle bundle = getIntent().getExtras();
+//        Log.d("Test bundle", bundle.getString("USERNAME", "username not found"));
+
         // Set click listeners
         btnContinue.setOnClickListener(v -> {
             // Get the selected age and pass it to the next activity
             int age = ageAdapter.getSelectedAge();
             Intent intent = new Intent(AgeSelectActivity.this, WeightActivity.class);
-            intent.putExtra("AGE", age);
+            bundle.putInt("AGE", age);
+            intent.putExtras(bundle);
             startActivity(intent);
         });
 

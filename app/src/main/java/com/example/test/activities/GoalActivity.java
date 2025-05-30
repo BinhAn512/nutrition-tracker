@@ -3,6 +3,7 @@ package com.example.test.activities;
 import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.RadioButton;
@@ -36,13 +37,17 @@ public class GoalActivity extends AppCompatActivity {
         // Set up click listeners for radio buttons
         setupGoalSelectionListeners();
 
+        Bundle bundle = getIntent().getExtras();
+        Log.d("Test bundle weight", String.valueOf(bundle.getInt("WEIGHT", 0)));
+
         // Set up continue button
         btnContinue.setOnClickListener(v -> {
             // Create intent to go to gender selection screen
             Intent intent = new Intent(GoalActivity.this, GenderActivity.class);
 
             // Pass selected goal to next activity
-            intent.putExtra("GOAL", selectedGoal);
+            bundle.putString("GOAL", selectedGoal);
+            intent.putExtras(bundle);
 
             startActivity(intent);
         });

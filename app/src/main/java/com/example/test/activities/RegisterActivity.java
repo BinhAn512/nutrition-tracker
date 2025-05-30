@@ -214,6 +214,7 @@ public class RegisterActivity extends AppCompatActivity {
                 Bundle bundle = new Bundle();
                 bundle.putString("USERNAME", username);
                 bundle.putString("EMAIL", email);
+                bundle.putString("PASSWORD", password);
 
                 User user = new User(username, email, password);
                 ApiService.apiService.createUser(user).enqueue(new Callback<User>() {

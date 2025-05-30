@@ -122,7 +122,9 @@ public class LoginActivity extends AppCompatActivity {
                             Toast.makeText(LoginActivity.this, "Đăng nhập thành công!", Toast.LENGTH_SHORT).show();
                             // Navigate to main activity
                             Intent intent = new Intent(LoginActivity.this, HomeScreen.class);
-                            intent.putExtra("USER_ID", user.getId());
+                            Bundle bundle = new Bundle();
+                            bundle.putInt("USER_ID", user.getId());
+                            intent.putExtras(bundle);
                             startActivity(intent);
                             finish();
                         } else {

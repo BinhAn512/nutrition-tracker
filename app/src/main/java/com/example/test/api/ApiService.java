@@ -7,6 +7,7 @@ import com.example.test.models.FoodNutrition;
 import com.example.test.models.Macronutrients;
 import com.example.test.models.Minerals;
 import com.example.test.models.User;
+import com.example.test.models.UserProfile;
 import com.example.test.models.Vitamins;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -80,4 +81,7 @@ public interface ApiService {
     Call<User> getUserByUsername(@Path("username") String username);
     @POST("user")
     Call<User> createUser(@Body User user);
+
+    @POST("user_profile")
+    Call<UserProfile> createUserProfile(@Body UserProfile userProfile);
 }
