@@ -6,6 +6,8 @@ import com.example.test.models.FoodLog;
 import com.example.test.models.FoodNutrition;
 import com.example.test.models.Macronutrients;
 import com.example.test.models.Minerals;
+import com.example.test.models.User;
+import com.example.test.models.UserProfile;
 import com.example.test.models.Vitamins;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -62,8 +64,9 @@ public interface ApiService {
     Call<FoodLog> getFoodLog(@Path("id") int foodLogId);
     @GET("food_logs/{date}")
     Call<List<FoodLog>> getFoodLogByDate(@Path("date") String date);
-    @GET("food_logs/food/{date}")
-    Call<List<FoodNutrition>> getFoodByDate(@Path("date") String date);
+    @GET("food_logs/food")
+    Call<List<FoodNutrition>> getFoodByDate(@Query("date") String date,
+                                            @Query("user_id") int userId);
     @GET("food_logs/food")
     Call<List<Food>> getFoodByMealDate(@Query("date") String date,
                                        @Query("meal_type") String mealType);
@@ -71,4 +74,15 @@ public interface ApiService {
     Call<List<Macronutrients>> getMacroByDate(@Path("date") String date);
     @POST("food_log")
     Call<FoodLog> createFoodLog(@Body FoodLog foodLog);
+
+    @GET("user")
+    Call<User> getUserInfo(@Query("username") String username,
+                           @Query("password") String password);
+    @GET("user/{username}")
+    Call<User> getUserByUsername(@Path("username") String username);
+    @POST("user")
+    Call<User> createUser(@Body User user);
+
+    @POST("user_profile")
+    Call<UserProfile> createUserProfile(@Body UserProfile userProfile);
 }

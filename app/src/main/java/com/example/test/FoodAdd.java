@@ -4,9 +4,12 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.text.Editable;
+import android.text.TextWatcher;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
@@ -20,7 +23,6 @@ import com.example.test.models.Food;
 import com.example.test.models.FoodLog;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.List;
 
 import retrofit2.Call;
@@ -36,12 +38,18 @@ public class FoodAdd extends AppCompatActivity implements FoodAdapter.OnFoodItem
     private ConstraintLayout selectionContainer;
     private TextView kcalValue;
     private Button btnAddSelection;
-    List<Food> foods;
+    private EditText searchInput;
+
+    List<Food> originalFoods;
+    List<Food> foods; // Store original list for search filtering
     List<FavouriteFood> favouriteFoods;
+
     public static int mealId;
     public static String dateData;
     int selectedFoodPosition;
     Intent intent;
+
+    private boolean isShowingFavorites = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,7 +68,10 @@ public class FoodAdd extends AppCompatActivity implements FoodAdapter.OnFoodItem
         selectionContainer = findViewById(R.id.selection_container);
         kcalValue = findViewById(R.id.kcal_value);
         btnAddSelection = findViewById(R.id.btn_add_selection);
+        searchInput = findViewById(R.id.search_input);
+
         foods = new ArrayList<>();
+        originalFoods = new ArrayList<>();
         favouriteFoods = new ArrayList<>();
 
         boolean showFavorites = intent.getBooleanExtra("SHOW_FAVORITES", false);
@@ -85,7 +96,8 @@ public class FoodAdd extends AppCompatActivity implements FoodAdapter.OnFoodItem
             }
         });
 
-//        FetchFoodData();
+        // Set up search functionality
+        setupSearchFeature();
 
         // Set click listener for Add button
         btnAddSelection.setOnClickListener(new View.OnClickListener() {
@@ -111,7 +123,62 @@ public class FoodAdd extends AppCompatActivity implements FoodAdapter.OnFoodItem
 
     }
 
+    private void setupSearchFeature() {
+        searchInput.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                // Not needed
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                // Filter the food list as user types
+                filterFoodList(s.toString());
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                // Not needed
+            }
+        });
+    }
+
+    private void filterFoodList(String query) {
+        if (originalFoods == null || originalFoods.isEmpty()) {
+            return;
+        }
+
+        List<Food> filteredList = new ArrayList<>();
+
+        if (query.trim().isEmpty()) {
+            // If search is empty, show all foods
+            filteredList.addAll(originalFoods);
+        } else {
+            // Filter foods based on name (case-insensitive)
+            String lowerCaseQuery = query.toLowerCase().trim();
+            for (Food food : originalFoods) {
+                if (food.getName().toLowerCase().contains(lowerCaseQuery)) {
+                    filteredList.add(food);
+                }
+            }
+        }
+        // Update the adapter with filtered list
+        foods.clear();
+        foods.addAll(filteredList);
+
+        if (foodAdapter != null) {
+            foodAdapter.notifyDataSetChanged();
+            // Reset selection when search results change
+            foodAdapter.setSelectedPosition(-1);
+            selectionContainer.setVisibility(View.GONE);
+        }
+    }
+
     private void setActiveTab(TextView activeTab) {
+
+        // Clear search when switching tabs
+        searchInput.setText("");
+
         // Reset all tabs
         tabRecent.setBackground(null);
         tabRecent.setTextColor(getResources().getColor(android.R.color.darker_gray));
@@ -143,7 +210,7 @@ public class FoodAdd extends AppCompatActivity implements FoodAdapter.OnFoodItem
         selectionContainer.setVisibility(View.VISIBLE);
 
         // Update the add button text to show count
-        btnAddSelection.setText("Add (1)");
+        btnAddSelection.setText("Add");
 
         selectedFoodPosition = position;
     }
@@ -162,11 +229,17 @@ public class FoodAdd extends AppCompatActivity implements FoodAdapter.OnFoodItem
         ApiService.apiService.getFoods().enqueue(new Callback<List<Food>>() {
             @Override
             public void onResponse(Call<List<Food>> call, Response<List<Food>> response) {
-                foods = response.body();
-                Log.d("Foods", String.valueOf(foods.get(1).getName()));
-                // Set up adapter
-                foodAdapter = new FoodAdapter(foods, FoodAdd.this);
-                foodListRecyclerView.setAdapter(foodAdapter);
+                if (response.body() != null) {
+                    originalFoods.clear();
+                    originalFoods.addAll(response.body());
+
+                    foods.clear();
+                    foods.addAll(response.body());
+                    Log.d("Foods", String.valueOf(originalFoods.get(1).getName()));
+                    // Set up adapter
+                    foodAdapter = new FoodAdapter(foods, FoodAdd.this);
+                    foodListRecyclerView.setAdapter(foodAdapter);
+                }
             }
 
             @Override
@@ -187,14 +260,21 @@ public class FoodAdd extends AppCompatActivity implements FoodAdapter.OnFoodItem
 //        foods.add(new Food("Sushi, Yellowtail (Hamachi)", 65, 30));
 //        foods.add(new Food("Sushi, Eel (Unagi)", 100, 35));
 
-        ApiService.apiService.getFavouriteFoods(1).enqueue(new Callback<List<Food>>() {
+        ApiService.apiService.getFavouriteFoods(HomeScreen.userId).enqueue(new Callback<List<Food>>() {
             @Override
             public void onResponse(Call<List<Food>> call, Response<List<Food>> response) {
-                foods = response.body();
+                if (response.body() != null) {
+                    originalFoods.clear();
+                    originalFoods.addAll(response.body());
+
+                    foods.clear();
+                    foods.addAll(response.body());
 //                Log.d("Foods", String.valueOf(foods.get(1).getName()));
-                // Set up adapter
-                foodAdapter = new FoodAdapter(foods, FoodAdd.this);
-                foodListRecyclerView.setAdapter(foodAdapter);
+                    // Set up adapter
+                    foodAdapter = new FoodAdapter(foods, FoodAdd.this);
+                    foodListRecyclerView.setAdapter(foodAdapter);
+                }
+
             }
 
             @Override
@@ -219,7 +299,7 @@ public class FoodAdd extends AppCompatActivity implements FoodAdapter.OnFoodItem
         }
         Food selectedFood = foodAdapter.getSelectedItem();
 
-        FoodLog foodLog = new FoodLog(1, selectedFood.getId(),
+        FoodLog foodLog = new FoodLog(HomeScreen.userId, selectedFood.getId(),
                 1, "kg", meal, dateData, "");
         ApiService.apiService.createFoodLog(foodLog).enqueue(new Callback<FoodLog>() {
             @Override

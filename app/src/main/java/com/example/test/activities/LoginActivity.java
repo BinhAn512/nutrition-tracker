@@ -1,8 +1,5 @@
 package com.example.test.activities;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.content.ContextCompat;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -10,6 +7,9 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Toast;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 
 import com.example.test.HomeScreen;
 import com.example.test.R;
@@ -23,9 +23,9 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class MainActivity extends AppCompatActivity {
+public class LoginActivity extends AppCompatActivity {
     private TextInputLayout tilEmail, tilPassword;
-    private TextInputEditText etEmail, etPassword;
+    private TextInputEditText etUsername, etPassword;
     private MaterialButton btnLogin, btnRegister;
 
     @Override
@@ -46,7 +46,7 @@ public class MainActivity extends AppCompatActivity {
     private void initViews() {
         tilEmail = findViewById(R.id.til_email);
         tilPassword = findViewById(R.id.til_password);
-        etEmail = findViewById(R.id.et_username);
+        etUsername = findViewById(R.id.et_username);
         etPassword = findViewById(R.id.et_password);
         btnLogin = findViewById(R.id.btn_login);
         btnRegister = findViewById(R.id.btn_register);
@@ -69,7 +69,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void handleLogin() {
-        String username = etEmail.getText().toString().trim();
+        String username = etUsername.getText().toString().trim();
         String password = etPassword.getText().toString().trim();
 
         // Reset previous errors
@@ -79,7 +79,7 @@ public class MainActivity extends AppCompatActivity {
         // Validate input
         if (TextUtils.isEmpty(username)) {
             tilEmail.setError("Vui lòng nhập username");
-            etEmail.requestFocus();
+            etUsername.requestFocus();
             return;
         }
 
@@ -119,20 +119,22 @@ public class MainActivity extends AppCompatActivity {
                     public void onResponse(Call<User> call, Response<User> response) {
                         User user = response.body();
                         if (response.isSuccessful() && user != null) {
-                            Toast.makeText(MainActivity.this, "Đăng nhập thành công!", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(LoginActivity.this, "Đăng nhập thành công!", Toast.LENGTH_SHORT).show();
                             // Navigate to main activity
-                            Intent intent = new Intent(MainActivity.this, HomeScreen.class);
-                            intent.putExtra("USER_ID", user.getId());
+                            Intent intent = new Intent(LoginActivity.this, HomeScreen.class);
+                            Bundle bundle = new Bundle();
+                            bundle.putInt("USER_ID", user.getId());
+                            intent.putExtras(bundle);
                             startActivity(intent);
                             finish();
                         } else {
-                            Toast.makeText(MainActivity.this, "Username hoặc mật khẩu không đúng", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(LoginActivity.this, "Email hoặc mật khẩu không đúng", Toast.LENGTH_SHORT).show();
                         }
                     }
 
                     @Override
                     public void onFailure(Call<User> call, Throwable t) {
-//                        Toast.makeText(MainActivity.this, "Username hoặc mật khẩu không đúng", Toast.LENGTH_SHORT).show();
+
                     }
                 });
             }
@@ -141,7 +143,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void handleRegister() {
         // TODO: Navigate to register activity
-        Intent intent = new Intent(MainActivity.this, RegisterActivity.class);
+        Intent intent = new Intent(LoginActivity.this, StartScreenActivity.class);
         startActivity(intent);
     }
 }

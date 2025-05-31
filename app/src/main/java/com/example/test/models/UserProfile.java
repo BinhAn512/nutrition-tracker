@@ -3,9 +3,6 @@ package com.example.test.models;
 import com.google.gson.annotations.SerializedName;
 
 public class UserProfile {
-    @SerializedName("profile_id")
-    private int id;
-
     @SerializedName("user_id")
     private int userId;
 
@@ -14,9 +11,6 @@ public class UserProfile {
 
     @SerializedName("gender")
     private String gender;
-
-    @SerializedName("height")
-    private float height;
 
     @SerializedName("weight")
     private float weight;
@@ -27,12 +21,13 @@ public class UserProfile {
     @SerializedName("daily_calorie_goal")
     private int dailyCalorieGoal;
 
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
+    public UserProfile(int userId, int age, String gender, float weight, String weight_goal, int dailyCalorieGoal) {
+        this.userId = userId;
+        this.age = age;
+        this.gender = gender;
+        this.weight = weight;
+        this.weight_goal = weight_goal;
+        this.dailyCalorieGoal = dailyCalorieGoal;
     }
 
     public int getUserId() {
@@ -57,14 +52,6 @@ public class UserProfile {
 
     public void setGender(String gender) {
         this.gender = gender;
-    }
-
-    public float getHeight() {
-        return height;
-    }
-
-    public void setHeight(float height) {
-        this.height = height;
     }
 
     public float getWeight() {

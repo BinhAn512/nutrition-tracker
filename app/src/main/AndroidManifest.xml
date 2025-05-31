@@ -54,6 +54,9 @@
         <activity
             android:name=".InsightsScreen">
         </activity>
+        <activity
+            android:name=".activities.RegisterActivity">
+        </activity>
     </application>
 
 </manifest>

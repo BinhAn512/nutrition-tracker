@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.SeekBar;
@@ -44,15 +45,18 @@ public class WeightActivity extends AppCompatActivity {
         // Set up weight slider
         setupWeightSlider();
 
+        Bundle bundle = getIntent().getExtras();
+//        Log.d("Test bundle", String.valueOf(bundle.getInt("AGE", 0)));
+
         // Set up continue button
         btnContinue.setOnClickListener(v -> {
             // Create intent to go to next screen
             Intent intent = new Intent(WeightActivity.this, GoalActivity.class);
 
             // Pass data to next activity
-            intent.putExtra("AGE", age);
-            intent.putExtra("WEIGHT", weightKg); // Always pass weight in kg for consistency
-            intent.putExtra("WEIGHT_UNIT", isKgSelected ? "kg" : "lbs");
+            bundle.putInt("WEIGHT", weightKg);
+            intent.putExtras(bundle);
+//            intent.putExtra("WEIGHT_UNIT", isKgSelected ? "kg" : "lbs");
 
             startActivity(intent);
         });

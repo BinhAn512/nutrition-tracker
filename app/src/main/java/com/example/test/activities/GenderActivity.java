@@ -3,12 +3,19 @@ package com.example.test.activities;
 import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.RadioButton;
 
 import com.example.test.HomeScreen;
 import com.example.test.R;
+import com.example.test.api.ApiService;
+import com.example.test.models.UserProfile;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class GenderActivity extends AppCompatActivity {
 
@@ -16,7 +23,7 @@ public class GenderActivity extends AppCompatActivity {
     private ImageButton btnBack;
     private RadioButton rbMale;
     private RadioButton rbOther;
-    private String selectedGoal = "male"; // Default selection
+    private String selectedGender = "male"; // Default selection
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,15 +45,39 @@ public class GenderActivity extends AppCompatActivity {
         // Set up click listeners for radio buttons
         setupGoalSelectionListeners();
 
+        Bundle bundle = getIntent().getExtras();
+        Log.d("Test bundle goal", bundle.getString("GOAL", ""));
+        Log.d("Test bundle weight", String.valueOf(bundle.getInt("WEIGHT", 0)));
+
         // Set up continue button
         btnContinue.setOnClickListener(v -> {
             // Create intent to go to gender selection screen
             Intent intent = new Intent(GenderActivity.this, HomeScreen.class);
 
             // Pass selected goal to next activity
-            intent.putExtra("GENDER", selectedGoal);
+            bundle.putString("GENDER", selectedGender);
+            intent.putExtras(bundle);
 
-            // ADD USER PROFILE (TA)
+            // Insert data into database
+            UserProfile userProfile = new UserProfile(
+                    bundle.getInt("USER_ID"),
+                    bundle.getInt("AGE"),
+                    bundle.getString("GENDER"),
+                    bundle.getInt("WEIGHT"),
+                    bundle.getString("GOAL"),
+                    2560
+            );
+            ApiService.apiService.createUserProfile(userProfile).enqueue(new Callback<UserProfile>() {
+                @Override
+                public void onResponse(Call<UserProfile> call, Response<UserProfile> response) {
+
+                }
+
+                @Override
+                public void onFailure(Call<UserProfile> call, Throwable t) {
+
+                }
+            });
 
             startActivity(intent);
         });
@@ -59,19 +90,19 @@ public class GenderActivity extends AppCompatActivity {
 
     private void setupGoalSelectionListeners() {
         rbFemale.setOnClickListener(v -> {
-            selectedGoal = "female";
+            selectedGender = "female";
             rbFemale.setChecked(true);
             updateRadioUI(rbFemale);
         });
 
         rbMale.setOnClickListener(v -> {
-            selectedGoal = "male";
+            selectedGender = "male";
             rbMale.setChecked(true);
             updateRadioUI(rbMale);
         });
 
         rbOther.setOnClickListener(v -> {
-            selectedGoal = "other";
+            selectedGender = "other";
             rbOther.setChecked(true);
             updateRadioUI(rbOther);
         });

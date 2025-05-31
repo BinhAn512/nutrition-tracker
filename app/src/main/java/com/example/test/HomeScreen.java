@@ -43,11 +43,23 @@ public class HomeScreen extends AppCompatActivity implements MealAdapter.OnMealC
     private Calendar currentDate;
 
     private DailyNutrition dailyNutrition;
+    public static int userId;
+    Bundle bundle;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.home_screen);
+
+        try {
+            Intent intent = getIntent();
+            if (intent != null) {
+                bundle = intent.getExtras();
+                userId = bundle.getInt("USER_ID");
+            }
+        } catch (Exception e) {
+
+        }
 
         initViews();
         setupNavigationView();
@@ -130,7 +142,7 @@ public class HomeScreen extends AppCompatActivity implements MealAdapter.OnMealC
         dateTextView.setText(formattedDate);
 
         String dateData = dataDateFormat.format(currentDate.getTime());
-        ApiService.apiService.getFoodByDate(dateData).enqueue(new Callback<List<FoodNutrition>>() {
+        ApiService.apiService.getFoodByDate(dateData, userId).enqueue(new Callback<List<FoodNutrition>>() {
             @Override
             public void onResponse(Call<List<FoodNutrition>> call, Response<List<FoodNutrition>> response) {
                 List<FoodNutrition> foods = response.body();
@@ -181,23 +193,23 @@ public class HomeScreen extends AppCompatActivity implements MealAdapter.OnMealC
 //            }
 //        });
 
-        ApiService.apiService.getFoodByMealDate(dateData, "breakfast").enqueue(new Callback<List<Food>>() {
-            @Override
-            public void onResponse(Call<List<Food>> call, Response<List<Food>> response) {
-                List<Food> foods = response.body();
-                int totalCalories = 0;
-                if (response.isSuccessful() && foods != null) {
-                    for (Food food : foods) {
-                        totalCalories += food.getCalories();
-                    }
-                }
-            }
-
-            @Override
-            public void onFailure(Call<List<Food>> call, Throwable t) {
-
-            }
-        });
+//        ApiService.apiService.getFoodByMealDate(dateData, "breakfast").enqueue(new Callback<List<Food>>() {
+//            @Override
+//            public void onResponse(Call<List<Food>> call, Response<List<Food>> response) {
+//                List<Food> foods = response.body();
+//                int totalCalories = 0;
+//                if (response.isSuccessful() && foods != null) {
+//                    for (Food food : foods) {
+//                        totalCalories += food.getCalories();
+//                    }
+//                }
+//            }
+//
+//            @Override
+//            public void onFailure(Call<List<Food>> call, Throwable t) {
+//
+//            }
+//        });
         // Update nutritions data in that day
 
     }

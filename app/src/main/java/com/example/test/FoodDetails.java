@@ -135,7 +135,7 @@ public class FoodDetails extends AppCompatActivity {
    }
 
    private void AddToFavourite() {
-       FavouriteFood favouriteFood = new FavouriteFood(1, foodId);
+       FavouriteFood favouriteFood = new FavouriteFood(HomeScreen.userId, foodId);
        ApiService.apiService.createFavouriteFood(favouriteFood).enqueue(new Callback<FavouriteFood>() {
            @Override
            public void onResponse(Call<FavouriteFood> call, Response<FavouriteFood> response) {
@@ -152,7 +152,7 @@ public class FoodDetails extends AppCompatActivity {
    }
 
    private void RemoveFromFavourite() {
-        ApiService.apiService.deleteFavouriteFood(1, foodId).enqueue(new Callback<FavouriteFood>() {
+        ApiService.apiService.deleteFavouriteFood(HomeScreen.userId, foodId).enqueue(new Callback<FavouriteFood>() {
             @Override
             public void onResponse(Call<FavouriteFood> call, Response<FavouriteFood> response) {
                 btnFavourite.setImageResource(R.drawable.unfavourite);
@@ -229,7 +229,7 @@ public class FoodDetails extends AppCompatActivity {
             return;
         }
 
-        FoodLog foodLog = new FoodLog(1, foodId,
+        FoodLog foodLog = new FoodLog(HomeScreen.userId, foodId,
                 Integer.valueOf(tvQuantity.getText().toString()), "kg", meal, dateData, "");
         ApiService.apiService.createFoodLog(foodLog).enqueue(new Callback<FoodLog>() {
             @Override
@@ -245,7 +245,7 @@ public class FoodDetails extends AppCompatActivity {
     }
 
     private void CheckFavouriteFood() {
-       ApiService.apiService.getFavouriteFood(1, foodId).enqueue(new Callback<FavouriteFood>() {
+       ApiService.apiService.getFavouriteFood(HomeScreen.userId, foodId).enqueue(new Callback<FavouriteFood>() {
            @Override
            public void onResponse(Call<FavouriteFood> call, Response<FavouriteFood> response) {
                FavouriteFood favouriteFood = response.body();
