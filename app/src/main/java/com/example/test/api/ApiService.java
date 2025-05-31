@@ -64,8 +64,9 @@ public interface ApiService {
     Call<FoodLog> getFoodLog(@Path("id") int foodLogId);
     @GET("food_logs/{date}")
     Call<List<FoodLog>> getFoodLogByDate(@Path("date") String date);
-    @GET("food_logs/food/{date}")
-    Call<List<FoodNutrition>> getFoodByDate(@Path("date") String date);
+    @GET("food_logs/food")
+    Call<List<FoodNutrition>> getFoodByDate(@Query("date") String date,
+                                            @Query("user_id") int userId);
     @GET("food_logs/food")
     Call<List<Food>> getFoodByMealDate(@Query("date") String date,
                                        @Query("meal_type") String mealType);

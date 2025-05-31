@@ -187,7 +187,7 @@ public class FoodAdd extends AppCompatActivity implements FoodAdapter.OnFoodItem
 //        foods.add(new Food("Sushi, Yellowtail (Hamachi)", 65, 30));
 //        foods.add(new Food("Sushi, Eel (Unagi)", 100, 35));
 
-        ApiService.apiService.getFavouriteFoods(1).enqueue(new Callback<List<Food>>() {
+        ApiService.apiService.getFavouriteFoods(HomeScreen.userId).enqueue(new Callback<List<Food>>() {
             @Override
             public void onResponse(Call<List<Food>> call, Response<List<Food>> response) {
                 foods = response.body();
@@ -219,7 +219,7 @@ public class FoodAdd extends AppCompatActivity implements FoodAdapter.OnFoodItem
         }
         Food selectedFood = foodAdapter.getSelectedItem();
 
-        FoodLog foodLog = new FoodLog(1, selectedFood.getId(),
+        FoodLog foodLog = new FoodLog(HomeScreen.userId, selectedFood.getId(),
                 1, "kg", meal, dateData, "");
         ApiService.apiService.createFoodLog(foodLog).enqueue(new Callback<FoodLog>() {
             @Override
