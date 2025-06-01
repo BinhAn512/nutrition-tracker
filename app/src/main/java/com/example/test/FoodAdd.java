@@ -33,6 +33,7 @@ public class FoodAdd extends AppCompatActivity implements FoodAdapter.OnFoodItem
 
     private RecyclerView foodListRecyclerView;
     private FoodAdapter foodAdapter;
+    private TextView tvTitle;
     private TextView tabRecent;
     private TextView tabFavorites;
     private ConstraintLayout selectionContainer;
@@ -69,10 +70,13 @@ public class FoodAdd extends AppCompatActivity implements FoodAdapter.OnFoodItem
         kcalValue = findViewById(R.id.kcal_value);
         btnAddSelection = findViewById(R.id.btn_add_selection);
         searchInput = findViewById(R.id.search_input);
+        tvTitle = findViewById(R.id.title_text);
 
         foods = new ArrayList<>();
         originalFoods = new ArrayList<>();
         favouriteFoods = new ArrayList<>();
+
+        setupTitle();
 
         boolean showFavorites = intent.getBooleanExtra("SHOW_FAVORITES", false);
         if (showFavorites) {
@@ -119,8 +123,19 @@ public class FoodAdd extends AppCompatActivity implements FoodAdapter.OnFoodItem
             startActivity(intent);
             finish();
         });
+    }
 
-
+    private void setupTitle() {
+        if (mealId == 1) {
+            tvTitle.setText("Breakfast");
+        } else if (mealId == 2) {
+            tvTitle.setText("Lunch");
+        } else if (mealId == 3) {
+            tvTitle.setText("Dinner");
+        } else {
+            Toast.makeText(FoodAdd.this, "Invalid meal", Toast.LENGTH_SHORT).show();
+            return;
+        }
     }
 
     private void setupSearchFeature() {

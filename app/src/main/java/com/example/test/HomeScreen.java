@@ -2,6 +2,7 @@ package com.example.test;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -16,6 +17,7 @@ import com.example.test.models.Food;
 import com.example.test.models.FoodLog;
 import com.example.test.models.FoodNutrition;
 import com.example.test.models.Macronutrients;
+import com.example.test.models.User;
 import com.example.test.views.CalorieCircleView;
 import com.example.test.views.NutrientCircleView;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -44,6 +46,7 @@ public class HomeScreen extends AppCompatActivity implements MealAdapter.OnMealC
 
     private DailyNutrition dailyNutrition;
     public static int userId;
+    public static String username, email;
     Bundle bundle;
 
     @Override
@@ -55,7 +58,10 @@ public class HomeScreen extends AppCompatActivity implements MealAdapter.OnMealC
             Intent intent = getIntent();
             if (intent != null) {
                 bundle = intent.getExtras();
+                Log.d("Username", bundle.getString("USERNAME", "Fail"));
                 userId = bundle.getInt("USER_ID");
+                username = bundle.getString("USERNAME");
+                email = bundle.getString("EMAIL");
             }
         } catch (Exception e) {
 
@@ -98,6 +104,7 @@ public class HomeScreen extends AppCompatActivity implements MealAdapter.OnMealC
                 return true;
             } else if (itemId == R.id.navigation_account) {
                 Intent intent = new Intent(HomeScreen.this, ProfileScreen.class);
+                intent.putExtras(bundle);
                 startActivity(intent);
                 finish();
                 return true;

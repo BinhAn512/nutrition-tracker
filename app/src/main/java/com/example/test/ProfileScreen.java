@@ -5,17 +5,26 @@ import android.view.View;
 import android.content.Intent;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class ProfileScreen extends AppCompatActivity {
+    TextView tvUsername;
+    TextView tvEmail;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_account);
+        tvUsername = findViewById(R.id.profile_username);
+        tvEmail = findViewById(R.id.profile_email);
+        
+        tvUsername.setText(HomeScreen.username);
+        tvEmail.setText(HomeScreen.email);
 
         // Setup toolbar/header back button
 //        ImageButton backButton = findViewById(R.id.back_button);
