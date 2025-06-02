@@ -299,6 +299,7 @@
                             android:textSize="12sp" />
 
                         <TextView
+                            android:id="@+id/carbs_percent"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="4dp"
@@ -329,6 +330,7 @@
                             android:textSize="12sp" />
 
                         <TextView
+                            android:id="@+id/protein_percent"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="4dp"
@@ -359,6 +361,7 @@
                             android:textSize="12sp" />
 
                         <TextView
+                            android:id="@+id/fat_percent"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="4dp"

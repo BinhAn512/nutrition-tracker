@@ -6,6 +6,7 @@ import androidx.core.content.ContextCompat;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -122,7 +123,13 @@ public class MainActivity extends AppCompatActivity {
                             Toast.makeText(MainActivity.this, "Đăng nhập thành công!", Toast.LENGTH_SHORT).show();
                             // Navigate to main activity
                             Intent intent = new Intent(MainActivity.this, HomeScreen.class);
-                            intent.putExtra("USER_ID", user.getId());
+                            Bundle bundle = new Bundle();
+                            bundle.putInt("USER_ID", user.getId());
+                            bundle.putString("USERNAME", user.getUsername());
+                            bundle.putString("EMAIL", user.getEmail());
+                            intent.putExtras(bundle);
+//                            Log.d("Login test", bundle.getString("USERNAME", "Fail login bundle"));
+
                             startActivity(intent);
                             finish();
                         } else {

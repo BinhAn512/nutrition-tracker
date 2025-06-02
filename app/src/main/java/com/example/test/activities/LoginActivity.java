@@ -3,6 +3,7 @@ package com.example.test.activities;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -124,6 +125,9 @@ public class LoginActivity extends AppCompatActivity {
                             Intent intent = new Intent(LoginActivity.this, HomeScreen.class);
                             Bundle bundle = new Bundle();
                             bundle.putInt("USER_ID", user.getId());
+                            bundle.putString("USERNAME", user.getUsername());
+                            bundle.putString("EMAIL", user.getEmail());
+                            Log.d("Login test", bundle.getString("USERNAME", "Fail login bundle"));
                             intent.putExtras(bundle);
                             startActivity(intent);
                             finish();
