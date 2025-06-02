@@ -3,6 +3,7 @@ package com.example.test;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -10,6 +11,9 @@ import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 
+import com.example.test.api.ApiService;
+import com.example.test.models.FoodNutrition;
+import com.example.test.models.Macronutrients;
 import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.components.LimitLine;
 import com.github.mikephil.charting.components.Legend;
@@ -25,8 +29,14 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicInteger;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class InsightsScreen extends AppCompatActivity {
 
@@ -42,6 +52,14 @@ public class InsightsScreen extends AppCompatActivity {
 
     // Sample data storage
     private Map<String, DayData> weeklyData;
+
+    private TextView tvCarbsPercent, tvProteinPercent, tvFatPercent;
+
+    // Callback interface for async data loading
+    public interface ChartDataCallback {
+        void onDataReady(ArrayList<BarEntry> entries);
+        void onError(String error);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -109,15 +127,15 @@ public class InsightsScreen extends AppCompatActivity {
 
                 // Generate varied sample data
                 int baseCalorie = 1600 + (int)(Math.random() * 600);
-                float carbsPercent = 40f + (float)(Math.random() * 15);
-                float proteinPercent = 15f + (float)(Math.random() * 15);
-                float fatPercent = 100f - carbsPercent - proteinPercent;
+                float carbs = 40f + (float)(Math.random() * 15);
+                float protein = 15f + (float)(Math.random() * 15);
+                float fat = 100f - carbs - protein;
 
                 weeklyData.put(dateKey, new DayData(
                         baseCalorie,
-                        carbsPercent,
-                        proteinPercent,
-                        fatPercent
+                        carbs,
+                        protein,
+                        fat
                 ));
 
                 cal.add(Calendar.DAY_OF_MONTH, 1);
@@ -142,44 +160,179 @@ public class InsightsScreen extends AppCompatActivity {
         return days;
     }
 
-    private ArrayList<BarEntry> getCurrentWeekCalorieData() {
+    private ArrayList<BarEntry> getCurrentWeekCalorieData(ChartDataCallback callback) {
         ArrayList<BarEntry> entries = new ArrayList<>();
         Calendar cal = (Calendar) currentWeekStart.clone();
+        final int totalDays = 7;
+        final AtomicInteger completedCalls = new AtomicInteger(0);
+        final Map<Integer, Integer> dataMap = new HashMap<>();
 
         for (int i = 0; i < 7; i++) {
+            int index = i;
             String dateKey = getDateKey(cal);
-            DayData data = weeklyData.get(dateKey);
 
-            float calories = data != null ? data.getCalories() : 1800f;
-            entries.add(new BarEntry(i, calories));
+            ApiService.apiService.getFoodByDate(dateKey, HomeScreen.userId).enqueue(new Callback<List<FoodNutrition>>() {
+                @Override
+                public void onResponse(Call<List<FoodNutrition>> call, Response<List<FoodNutrition>> response) {
+                    int totalCalories = 0;
+                    List<FoodNutrition> nutrition = response.body();
+
+//                    Log.d("Nutrition size", String.valueOf(index));
+
+                    if (response.isSuccessful() && nutrition != null && !nutrition.isEmpty()) {
+
+                        for (FoodNutrition item : nutrition) {
+                            totalCalories += item.getCalories();
+                        }
+                    }
+
+                    synchronized (dataMap) {
+                        dataMap.put(index, totalCalories);
+
+                        if (completedCalls.incrementAndGet() == totalDays) {
+                            // All calls completed, create entries in correct order
+                            ArrayList<BarEntry> entries = new ArrayList<>();
+                            for (int j = 0; j < totalDays; j++) {
+                                float calories = dataMap.getOrDefault(j, 0);
+                                entries.add(new BarEntry(j, calories));
+                            }
+                            callback.onDataReady(entries);
+                        }
+                    }
+                }
+
+                    @Override
+                    public void onFailure(Call<List<FoodNutrition>> call, Throwable t) {
+                        synchronized (dataMap) {
+                            dataMap.put(index, 0); // Default to 0 on failure
+
+                            if (completedCalls.incrementAndGet() == totalDays) {
+                                ArrayList<BarEntry> entries = new ArrayList<>();
+                                for (int j = 0; j < totalDays; j++) {
+                                    float calories = dataMap.getOrDefault(j, 0);
+                                    entries.add(new BarEntry(j, calories));
+                                }
+                                callback.onDataReady(entries);
+                            }
+                        }
+                    }
+            });
 
             cal.add(Calendar.DAY_OF_MONTH, 1);
         }
-
         return entries;
     }
 
-    private ArrayList<BarEntry> getCurrentWeekNutritionData() {
+    private void AddEntryData(ArrayList<BarEntry> entries, int index, int data) {
+        entries.add((new BarEntry(index, data)));
+    }
+
+    private ArrayList<BarEntry> getCurrentWeekNutritionData(ChartDataCallback callback) {
         ArrayList<BarEntry> entries = new ArrayList<>();
         Calendar cal = (Calendar) currentWeekStart.clone();
 
+        final int totalDays = 7;
+        final AtomicInteger completedCalls = new AtomicInteger(0);
+        final Map<Integer, float[]> dataMap = new HashMap<>();
+        final Map<String, Float> percentMap = new HashMap<String, Float>(){{
+            put("carbs", 0f);
+            put("protein", 0f);
+            put("fat", 0f);
+        }};
+
         for (int i = 0; i < 7; i++) {
+            int index = i;
             String dateKey = getDateKey(cal);
-            DayData data = weeklyData.get(dateKey);
 
-            if (data != null) {
-                entries.add(new BarEntry(i, new float[]{
-                        data.getCarbsPercent(),
-                        data.getProteinPercent(),
-                        data.getFatPercent()
-                }));
-            } else {
-                entries.add(new BarEntry(i, new float[]{45f, 20f, 35f}));
-            }
+            ApiService.apiService.getFoodByDate(dateKey, HomeScreen.userId).enqueue(new Callback<List<FoodNutrition>>() {
+                @Override
+                public void onResponse(Call<List<FoodNutrition>> call, Response<List<FoodNutrition>> response) {
+                    float totalCarbs = 0f;
+                    float totalProtein = 0f;
+                    float totalFat = 0f;
 
+                    List<FoodNutrition> nutrition = response.body();
+
+//                    Log.d("Nutrition size", String.valueOf(index));
+
+                    if (response.isSuccessful() && nutrition != null && !nutrition.isEmpty()) {
+
+                        for (FoodNutrition item : nutrition) {
+                            totalCarbs += item.getCarbs();
+                            totalProtein += item.getProtein();
+                            totalFat += item.getFat();
+                        }
+                    }
+
+                    synchronized (dataMap) {
+                        float totalMacros = totalCarbs + totalProtein + totalFat;
+
+//                        Log.d("Total macro", String.valueOf(totalMacros));
+                        if (totalMacros != 0) {
+//                            Log.d("Carbs ratio", String.valueOf(totalCarbs / totalMacros * 100));
+//                            Log.d("Protein ratio", String.valueOf(totalProtein / totalMacros * 100));
+//                            Log.d("Fat ratio", String.valueOf(totalFat / totalMacros * 100));
+
+                            float currentCarbsPercent = percentMap.getOrDefault("carbs", 0f);
+                            currentCarbsPercent += totalCarbs;
+                            percentMap.put("carbs", currentCarbsPercent);
+
+                            float currentProteinPercent = percentMap.getOrDefault("protein", 0f);
+                            currentProteinPercent += totalProtein;
+                            percentMap.put("protein", currentProteinPercent);
+
+                            float currentFatPercent = percentMap.getOrDefault("fat", 0f);
+                            currentFatPercent += totalFat;
+                            percentMap.put("fat", currentFatPercent);
+
+                            float weeklyTotalMacros = currentCarbsPercent + currentProteinPercent + currentFatPercent;
+                            float weeklyCarbsPercent = currentCarbsPercent / weeklyTotalMacros * 100;
+                            float weeklyProteinPercent = currentProteinPercent / weeklyTotalMacros * 100;
+                            float weeklyFatPercent = currentFatPercent / weeklyTotalMacros * 100;
+                            tvCarbsPercent.setText(String.format("%.2f", weeklyCarbsPercent));
+                            tvProteinPercent.setText(String.format("%.2f", weeklyProteinPercent));
+                            tvFatPercent.setText(String.format("%.2f", weeklyFatPercent));
+
+                            dataMap.put(index, new float[]{totalCarbs / totalMacros * 100,
+                                    totalProtein / totalMacros * 100,
+                                    totalFat / totalMacros * 100});
+                        } else {
+                            dataMap.put(index, new float[]{0, 0, 0});
+                        }
+
+
+
+                        if (completedCalls.incrementAndGet() == totalDays) {
+                            // All calls completed, create entries in correct order
+                            ArrayList<BarEntry> entries = new ArrayList<>();
+                            for (int j = 0; j < totalDays; j++) {
+                                float[] macros = dataMap.getOrDefault(j, new float[]{0, 0, 0});
+                                entries.add(new BarEntry(j, macros));
+                            }
+                            callback.onDataReady(entries);
+                        }
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<List<FoodNutrition>> call, Throwable t) {
+                    synchronized (dataMap) {
+                        dataMap.put(index, new float[]{0, 0, 0}); // Default to 0 on failure
+
+                        if (completedCalls.incrementAndGet() == totalDays) {
+                            ArrayList<BarEntry> entries = new ArrayList<>();
+                            for (int j = 0; j < totalDays; j++) {
+                                float[] macros = dataMap.getOrDefault(j, new float[]{0, 0, 0});
+                                entries.add(new BarEntry(j, macros));
+                            }
+                            callback.onDataReady(entries);
+                        }
+                    }
+                }
+            });
             cal.add(Calendar.DAY_OF_MONTH, 1);
         }
-
+        Log.d("Final Carbs Map", percentMap.get("carbs").toString());
         return entries;
     }
 
@@ -203,6 +356,9 @@ public class InsightsScreen extends AppCompatActivity {
         tvDateRange = findViewById(R.id.tvDateRange);
         ivPrevious = findViewById(R.id.ivPrevious);
         ivNext = findViewById(R.id.ivNext);
+        tvCarbsPercent = findViewById(R.id.carbs_percent);
+        tvProteinPercent = findViewById(R.id.protein_percent);
+        tvFatPercent = findViewById(R.id.fat_percent);
     }
 
     private void setupCalorieChart() {
@@ -213,6 +369,10 @@ public class InsightsScreen extends AppCompatActivity {
         calorieBarChart.setPinchZoom(false);
         calorieBarChart.setScaleEnabled(false);
         calorieBarChart.setDoubleTapToZoomEnabled(false);
+
+        tvCarbsPercent.setText("0");
+        tvProteinPercent.setText("0");
+        tvFatPercent.setText("0");
 
         // Set up X-axis
         XAxis xAxis = calorieBarChart.getXAxis();
@@ -237,19 +397,36 @@ public class InsightsScreen extends AppCompatActivity {
         Legend legend = calorieBarChart.getLegend();
         legend.setEnabled(false);
 
-        // Add current week data
-        ArrayList<BarEntry> entries = getCurrentWeekCalorieData();
-
-        BarDataSet dataSet = new BarDataSet(entries, "Calories");
-        dataSet.setColors(ContextCompat.getColor(this, R.color.LightGreen));
-
-
         // Add goal line
         LimitLine goalLine = new LimitLine(2000f, "");
         goalLine.setLineWidth(1f);
         goalLine.setLineColor(ContextCompat.getColor(this, R.color.Green));
         goalLine.enableDashedLine(10f, 10f, 0f);
         leftAxis.addLimitLine(goalLine);
+
+        // Add current week data
+        ArrayList<BarEntry> entries = getCurrentWeekCalorieData(new ChartDataCallback() {
+            @Override
+            public void onDataReady(ArrayList<BarEntry> entries) {
+                // This runs on the main thread when data is ready
+                updateCalorieChart(entries);
+            }
+
+            @Override
+            public void onError(String error) {
+                Log.e("CalorieChart", "Error loading data: " + error);
+                // Fallback to empty data or show error message
+                updateCalorieChart(new ArrayList<>());
+            }
+        });
+
+
+    }
+
+    // Separate method to update the chart once data is available
+    private void updateCalorieChart(ArrayList<BarEntry> entries) {
+        BarDataSet dataSet = new BarDataSet(entries, "Calories");
+        dataSet.setColors(ContextCompat.getColor(this, R.color.LightGreen));
 
         BarData barData = new BarData(dataSet);
         barData.setBarWidth(0.7f);
@@ -291,8 +468,22 @@ public class InsightsScreen extends AppCompatActivity {
         legend.setEnabled(false);
 
         // Add data for each nutrition type (carbs, protein, fat)
-        ArrayList<BarEntry> entries = getCurrentWeekNutritionData();
+        ArrayList<BarEntry> entries = getCurrentWeekNutritionData(new ChartDataCallback() {
+            @Override
+            public void onDataReady(ArrayList<BarEntry> entries) {
+                updateNutritionChart(entries);
+            }
 
+            @Override
+            public void onError(String error) {
+
+            }
+        });
+
+
+    }
+
+    private void updateNutritionChart(ArrayList<BarEntry> entries) {
         BarDataSet dataSet = new BarDataSet(entries, "Nutrition");
         dataSet.setColors(
                 ContextCompat.getColor(this, R.color.Red),     // Carbs
@@ -360,21 +551,21 @@ public class InsightsScreen extends AppCompatActivity {
     // Data class to hold daily nutrition and calorie data
     private static class DayData {
         private final float calories;
-        private final float carbsPercent;
-        private final float proteinPercent;
-        private final float fatPercent;
+        private final float carbs;
+        private final float protein;
+        private final float fat;
 
-        public DayData(float calories, float carbsPercent, float proteinPercent, float fatPercent) {
+        public DayData(float calories, float carbs, float protein, float fat) {
             this.calories = calories;
-            this.carbsPercent = carbsPercent;
-            this.proteinPercent = proteinPercent;
-            this.fatPercent = fatPercent;
+            this.carbs = carbs;
+            this.protein = protein;
+            this.fat = fat;
         }
 
         public float getCalories() { return calories; }
-        public float getCarbsPercent() { return carbsPercent; }
-        public float getProteinPercent() { return proteinPercent; }
-        public float getFatPercent() { return fatPercent; }
+        public float getCarbsPercent() { return carbs; }
+        public float getProteinPercent() { return protein; }
+        public float getFatPercent() { return fat; }
     }
 }
 
