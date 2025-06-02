@@ -22,7 +22,7 @@ public class ProfileScreen extends AppCompatActivity {
         setContentView(R.layout.activity_account);
         tvUsername = findViewById(R.id.profile_username);
         tvEmail = findViewById(R.id.profile_email);
-        
+
         tvUsername.setText(HomeScreen.username);
         tvEmail.setText(HomeScreen.email);
 
