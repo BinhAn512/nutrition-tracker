@@ -132,6 +132,16 @@ public class FoodDetails extends AppCompatActivity {
                }
            }
        });
+
+       ImageButton btnBack = findViewById(R.id.btnBack);
+       btnBack.setOnClickListener(new View.OnClickListener() {
+           @Override
+           public void onClick(View v) {
+               Intent intent = new Intent(FoodDetails.this, FoodAdd.class);
+               startActivity(intent);
+               finish();
+           }
+       });
    }
 
    private void AddToFavourite() {
