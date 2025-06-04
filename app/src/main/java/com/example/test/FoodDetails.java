@@ -71,6 +71,7 @@ public class FoodDetails extends AppCompatActivity {
     private ImageView btnDecrease;
     private TextView tvQuantity;
     private ImageButton btnFavourite;
+    ImageButton btnBack;
     private boolean isFavourite;
     int quantity;
     int foodId;
@@ -80,11 +81,6 @@ public class FoodDetails extends AppCompatActivity {
        super.onCreate(savedInstanceState);
        setContentView(R.layout.activity_food_details);
         AssignView();
-
-       ImageButton btn_back = findViewById(R.id.btnBack);
-       btn_back.setOnClickListener(v -> {
-           finish(); // Quay lại màn trước
-       });
 
        Intent intent = getIntent();
        foodId = intent.getIntExtra("foodId", -1);
@@ -133,13 +129,14 @@ public class FoodDetails extends AppCompatActivity {
            }
        });
 
-       ImageButton btnBack = findViewById(R.id.btnBack);
+
        btnBack.setOnClickListener(new View.OnClickListener() {
            @Override
            public void onClick(View v) {
                Intent intent = new Intent(FoodDetails.this, FoodAdd.class);
                startActivity(intent);
-               finish();
+               Log.d("Back to Food Add", "Success");
+//               finish();
            }
        });
    }
@@ -182,6 +179,7 @@ public class FoodDetails extends AppCompatActivity {
        btnIncrease = findViewById(R.id.btnQuantityAdd);
        tvQuantity = findViewById(R.id.quantityText);
        btnFavourite = findViewById(R.id.btnFavorite);
+       btnBack = findViewById(R.id.btnBack);
 
        tvFoodName = findViewById(R.id.foodName);
        tvCaloriesValue = findViewById(R.id.caloriesValue);
