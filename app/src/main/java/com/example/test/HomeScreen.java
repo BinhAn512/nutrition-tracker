@@ -104,7 +104,7 @@ public class HomeScreen extends AppCompatActivity implements MealAdapter.OnMealC
                 return true;
             } else if (itemId == R.id.navigation_account) {
                 Intent intent = new Intent(HomeScreen.this, ProfileScreen.class);
-                intent.putExtras(bundle);
+//                intent.putExtras(bundle);
                 startActivity(intent);
                 finish();
                 return true;

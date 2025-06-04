@@ -77,12 +77,12 @@ public class InsightsScreen extends AppCompatActivity {
         setupCalorieChart();
         setupNutritionChart();
 
-        ImageButton btn_account = findViewById(R.id.btn_ivLogo);
-        btn_account.setOnClickListener(v -> {
-            Intent intent = new Intent(this, ProfileScreen.class);
-            startActivity(intent);
-            finish();
-        });
+//        ImageButton btn_account = findViewById(R.id.btn_ivLogo);
+//        btn_account.setOnClickListener(v -> {
+//            Intent intent = new Intent(this, ProfileScreen.class);
+//            startActivity(intent);
+//            finish();
+//        });
     }
 
     private void setupNavigationListeners() {
