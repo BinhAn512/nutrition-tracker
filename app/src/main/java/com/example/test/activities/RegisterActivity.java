@@ -220,12 +220,12 @@ public class RegisterActivity extends AppCompatActivity {
                 ApiService.apiService.createUser(user).enqueue(new Callback<User>() {
                     @Override
                     public void onResponse(Call<User> call, Response<User> response) {
-
+                        Log.d("Create User", "onSucces: ");
                     }
 
                     @Override
                     public void onFailure(Call<User> call, Throwable t) {
-
+                        Log.d("Create User", "onFailure: ");
                     }
                 });
 

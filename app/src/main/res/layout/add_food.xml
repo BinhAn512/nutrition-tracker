@@ -39,16 +39,6 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <ImageView
-            android:id="@+id/dropdown_icon"
-            android:layout_width="24dp"
-            android:layout_height="24dp"
-            android:background="@drawable/dropdown"
-            app:layout_constraintStart_toEndOf="@id/title_text"
-            app:layout_constraintTop_toTopOf="@id/title_text"
-            app:layout_constraintBottom_toBottomOf="@id/title_text"
-            android:layout_marginStart="4dp"
-            android:contentDescription="Dropdown" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <!-- Search Bar -->
