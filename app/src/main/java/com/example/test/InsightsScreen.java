@@ -182,7 +182,7 @@ public class InsightsScreen extends AppCompatActivity {
                     if (response.isSuccessful() && nutrition != null && !nutrition.isEmpty()) {
 
                         for (FoodNutrition item : nutrition) {
-                            totalCalories += item.getCalories();
+                            totalCalories += item.getCalories() * item.getServingSize();
                         }
                     }
 
@@ -258,9 +258,9 @@ public class InsightsScreen extends AppCompatActivity {
                     if (response.isSuccessful() && nutrition != null && !nutrition.isEmpty()) {
 
                         for (FoodNutrition item : nutrition) {
-                            totalCarbs += item.getCarbs();
-                            totalProtein += item.getProtein();
-                            totalFat += item.getFat();
+                            totalCarbs += item.getCarbs() * item.getServingSize();
+                            totalProtein += item.getProtein() * item.getServingSize();
+                            totalFat += item.getFat() * item.getServingSize();
                         }
                     }
 
