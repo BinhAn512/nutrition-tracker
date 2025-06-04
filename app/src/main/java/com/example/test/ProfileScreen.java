@@ -9,6 +9,7 @@ import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.test.activities.MainActivity;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class ProfileScreen extends AppCompatActivity {
@@ -82,8 +83,9 @@ public class ProfileScreen extends AppCompatActivity {
         logoutItem.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // Handle logout
-                // Add your logout logic here
+                Intent intent = new Intent(ProfileScreen.this, MainActivity.class);
+                startActivity(intent);
+                finish();
             }
         });
 
