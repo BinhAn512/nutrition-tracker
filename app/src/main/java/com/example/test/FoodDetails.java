@@ -134,6 +134,8 @@ public class FoodDetails extends AppCompatActivity {
            @Override
            public void onClick(View v) {
                Intent intent = new Intent(FoodDetails.this, FoodAdd.class);
+               intent.putExtra("MEAL_ID", FoodAdd.mealId);
+               intent.putExtra("CURRENT_DATE", dateData);
                startActivity(intent);
                Log.d("Back to Food Add", "Success");
 //               finish();

@@ -232,7 +232,7 @@ public class FoodAdd extends AppCompatActivity implements FoodAdapter.OnFoodItem
 
     private void FetchFoodData() {
         // Set up RecyclerView
-        foodListRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+//        foodListRecyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         // Example food data (sushi items based on the screenshot)
 
